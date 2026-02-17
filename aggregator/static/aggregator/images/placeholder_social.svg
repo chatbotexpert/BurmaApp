@@ -1,0 +1,24 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1877F2"/>
+      <stop offset="100%" stop-color="#0d47a1"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <rect width="800" height="600" fill="url(#fbGrad)"/>
+  
+  <!-- Abstract Network nodes -->
+  <circle cx="100" cy="100" r="150" fill="rgba(255,255,255,0.03)"/>
+  <circle cx="700" cy="500" r="200" fill="rgba(255,255,255,0.03)"/>
+  
+  <!-- Logo Container -->
+  <circle cx="400" cy="260" r="70" fill="white" filter="url(#shadow)"/>
+  
+  <!-- Facebook 'f' -->
+  <path transform="translate(365, 225) scale(0.14)" fill="#1877F2" d="M365.257,67.393H95.744C42.866,67.393,0,110.259,0,163.137v269.513c0,52.878,42.866,95.744,95.744,95.744h269.513c52.878,0,95.744-42.866,95.744-95.744V163.137C461.001,110.259,418.135,67.393,365.257,67.393z M320.575,233.729l-38.995,0c-11.724,0-15.518,22.378-15.518,43.076v35.32h52.791l-6.901,70.187h-45.89v158.552h-74.149V382.312h-36.213v-70.187h36.213v-49.972c0-57.734,22.758-96.602,96.602-96.602l52.06,0.178V233.729z"/>
+
+  <text x="50%" y="70%" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="28" fill="white" text-anchor="middle" letter-spacing="0.05em">Faceook Post</text>
+</svg>

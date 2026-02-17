@@ -27,6 +27,34 @@ class Post(models.Model):
     published_date = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def display_image_url(self):
+        """
+        Returns the best available image URL for the post.
+        1. Explicit image_url
+        2. Extracted from content
+        3. Fallback based on source type
+        """
+        if self.image_url:
+            return self.image_url
+            
+        # Try to extract from content
+        import re
+        img_match = re.search(r'<img [^>]*src="([^"]+)"', self.original_content)
+        if img_match:
+            return img_match.group(1)
+            
+        # Fallback to placeholders
+        from django.templatetags.static import static
+        if self.source.source_type == 'FACEBOOK':
+            return '/static/aggregator/images/placeholder_social.svg'
+        elif self.source.source_type == 'TWITTER':
+            return '/static/aggregator/images/placeholder_twitter.svg'
+        elif self.source.source_type == 'TELEGRAM':
+            return '/static/aggregator/images/placeholder_telegram.svg'
+        else:
+            return '/static/aggregator/images/placeholder_news.svg'
+
     class Meta:
         ordering = ['-published_date']
 

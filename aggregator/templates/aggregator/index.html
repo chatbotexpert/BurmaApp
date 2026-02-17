@@ -86,14 +86,10 @@
 <div class="feed-grid">
     {% for post in page_obj %}
     <article class="news-card">
-        {% if post.image_url %}
-        <img src="{{ post.image_url }}" alt="" class="card-image" loading="lazy">
-        {% else %}
-        <div class="card-image"
-            style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); color: #64748b; font-weight: 600; min-height: 200px;">
-            {{ post.source.name }}
+        <div class="card-image-container">
+            <img src="{{ post.display_image_url }}" alt="" class="card-image" loading="lazy"
+                onerror="this.onerror=null; this.src='/static/aggregator/images/placeholder_news.svg';">
         </div>
-        {% endif %}
 
         <div class="card-content">
             <div class="source-badge">
