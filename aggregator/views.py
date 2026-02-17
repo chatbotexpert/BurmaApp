@@ -61,7 +61,19 @@ def feed_rss(request):
     posts = Post.objects.all()[:50] # Limit to last 50
     if source_id:
         posts = posts.filter(source__id=source_id)
+
+    # Check for format=xml or User-Agent indicating a reader (optional, but format=xml is explicit)
+    fmt = request.GET.get('format')
+    
+    if fmt != 'xml':
+        # Serve the modern HTML page
+        return render(request, 'aggregator/rss_feed.html', {
+            'posts': posts,
+            'title': title,
+            'description': description,
+        })
         
+    # --- Generate XML for RSS Readers ---
     feed = ExtendedRSSFeed(
         title=title,
         link=link,
@@ -109,9 +121,9 @@ def feed_rss(request):
         feed.add_item(**item_kwargs)
         
     xml_data = feed.writeString('utf-8')
-    # Inject XSLT instruction
-    xslt_instruction = '<?xml-stylesheet type="text/xsl" href="/static/aggregator/rss_style.xsl"?>\n'
-    # Insert after XML declaration
-    xml_data = xml_data.replace('<?xml version="1.0" encoding="utf-8"?>', '<?xml version="1.0" encoding="utf-8"?>\n' + xslt_instruction)
+    # We don't need the XSLT instruction anymore if we are serving HTML by default,
+    # but we can keep it for readers that might render XML directly.
+    # xslt_instruction = '<?xml-stylesheet type="text/xsl" href="/static/aggregator/rss_style_v2.xsl"?>\n'
+    # xml_data = xml_data.replace('<?xml version="1.0" encoding="utf-8"?>', '<?xml version="1.0" encoding="utf-8"?>\n' + xslt_instruction)
     
     return HttpResponse(xml_data, content_type="application/xml")
