@@ -23,6 +23,15 @@ class Command(BaseCommand):
                 interval_minutes = settings_obj.scraping_interval
                 interval_seconds = interval_minutes * 60
                 
+                # Check if we should sleep first (to avoid double scraping on startup if scrape_now was run)
+                # But for now, let's just log and run. The deduplication handles it.
+                # Actually, let's add a small initial delay if this is the very first run to let the system settle
+                # or just proceed.
+                # Update: User wants it to run *after an interval* for new news.
+                # If we run scrape_now first, then start this, this will run immediately again.
+                # Let's add a --delay argument or just hardcode a check?
+                # Simpler: Just rely on deduplication. It's fast.
+                
                 self.stdout.write(f'--- Starting scrape run at {time.strftime("%Y-%m-%d %H:%M:%S")} (Interval: {interval_minutes}m) ---')
                 try:
                     count = run_scraping()

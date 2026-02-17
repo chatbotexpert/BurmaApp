@@ -1,99 +1,82 @@
-import requests
-from bs4 import BeautifulSoup
-from datetime import datetime
-from django.utils import timezone
+from .telegram_client import get_telegram_client
+from telethon.tl.types import MessageMediaPhoto
 import logging
-import re
+import os
+from django.conf import settings
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
-def fetch_telegram_posts(channel_username, limit=10):
+def save_telegram_image(message):
     """
-    Scrapes public Telegram channel preview for posts.
-    :param channel_username: Username of the channel (e.g., 'mrattkya')
-    :param limit: Number of posts to attempt to fetch
-    :return: List of dicts with post data
+    Downloads image from message and returns the relative URL.
     """
-    # Clean username
-    channel_username = channel_username.replace('@', '').replace('https://t.me/', '').replace('s/', '')
-    if channel_username.endswith('/'):
-        channel_username = channel_username[:-1]
-
-    url = f"https://t.me/s/{channel_username}"
-    logger.info(f"Scraping Telegram: {url}")
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-    }
-
+    if not message.media or not isinstance(message.media, MessageMediaPhoto):
+        return None
+        
     try:
-        response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
+        # Create directory if not exists
+        media_root = os.path.join(settings.MEDIA_ROOT, 'telegram_images')
+        os.makedirs(media_root, exist_ok=True)
+        
+        # Filename: msg_id.jpg
+        # We assume channel ID is unique enough combined with msg ID or just handle overwrite
+        filename = f"{message.chat_id}_{message.id}.jpg"
+        filepath = os.path.join(media_root, filename)
+        
+        # Download if not exists
+        if not os.path.exists(filepath):
+            message.download_media(file=filepath)
+            
+        return f"/media/telegram_images/{filename}"
     except Exception as e:
-        logger.error(f"Failed to fetch Telegram page: {e}")
+        logger.error(f"Error downloading image: {e}")
+        return None
+
+def fetch_telegram_posts(channel_url, limit=10):
+    client = get_telegram_client()
+    if not client:
+        return []
+        
+    if not client.is_user_authorized():
+        logger.error("Telegram client not authorized. Run telegram_setup.py first.")
         return []
 
-    soup = BeautifulSoup(response.content, 'html.parser')
-    
-    # Telegram web preview messages are in .tgme_widget_message
-    messages = soup.find_all('div', class_='tgme_widget_message', limit=limit)
-    
     posts = []
-    for msg in messages:
-        try:
-            # 1. Extract Text
-            text_elem = msg.find('div', class_='tgme_widget_message_text')
-            text = text_elem.get_text(separator="\n", strip=True) if text_elem else ""
-            
-            # 2. Extract Image
-            image_url = None
-            photo_wrap = msg.find('a', class_='tgme_widget_message_photo_wrap')
-            if photo_wrap:
-                style = photo_wrap.get('style', '')
-                # Extract url('...') from background-image
-                match = re.search(r"url\('?(.*?)'?\)", style)
-                if match:
-                    image_url = match.group(1)
-            
-            # 3. Extract Date and Link
-            date_elem = msg.find('a', class_='tgme_widget_message_date')
-            if not date_elem:
-                continue
+    try:
+        # Extract username
+        # Expected formats: https://t.me/username, t.me/username, username
+        if 't.me/s/' in channel_url:
+             username = channel_url.split('t.me/s/')[-1].strip('/')
+        elif 't.me/' in channel_url:
+            username = channel_url.split('t.me/')[-1].strip('/')
+        else:
+            username = channel_url
 
-            post_url = date_elem.get('href') # e.g., https://t.me/channel/123
-            
-            time_elem = date_elem.find('time')
-            if time_elem and time_elem.get('datetime'):
-                dt_str = time_elem.get('datetime')
-                # Format is roughly ISO: 2023-10-27T08:30:19+00:00
-                try:
-                    published_date = datetime.fromisoformat(dt_str)
-                    if timezone.is_naive(published_date):
-                         published_date = timezone.make_aware(published_date)
-                except ValueError:
-                    published_date = timezone.now()
-            else:
-                 published_date = timezone.now()
-
-            # Skip empty posts (no text/no image)
-            if not text and not image_url:
+        # Get messages
+        messages = client.get_messages(username, limit=limit)
+        
+        for message in messages:
+            # Skip empty messages (service messages etc)
+            if not message.message and not message.media:
                 continue
                 
-            # Create title from first line or truncated text
-            title = text.split('\n')[0][:100] if text else "Telegram Post"
-            if len(title) < 5 and image_url:
-                title = "Photo Update"
-
+            # Construct permalink
+            # Public channel link: https://t.me/username/id
+            permalink = f"https://t.me/{username}/{message.id}"
+            
+            # Download Image
+            image_url = save_telegram_image(message)
+            
             posts.append({
-                'title': title,
-                'content': text,
+                'title': 'Telegram Post', # Telegram posts don't typically have titles
+                'text': message.message,
                 'image_url': image_url,
-                'url': post_url,
-                'published_date': published_date
+                'permalink': permalink,
+                'published_at': message.date
             })
             
-        except Exception as e:
-            logger.error(f"Error parsing a telegram message: {e}")
-            continue
+    except Exception as e:
+        logger.error(f"Error fetching telegram channel {channel_url}: {e}")
 
     return posts

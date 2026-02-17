@@ -120,6 +120,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "aggregator" / "static",
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Scraper Settings
 import os

@@ -57,9 +57,20 @@ A Django-based news aggregator that collects, translates, and displays news from
     python manage.py createsuperuser
     ```
 
+7.  **Setup Telegram Scraper** (One-time)
+    Required for scraping Telegram channels.
+    ```bash
+    python telegram_setup.py
+    ```
+    Follow the prompts to log in with your phone number.
+
 ## 🏃‍♂️ How to Run
 
-### 1. Start the Web Server
+### 1. One-Click Start (Windows)
+Double-click `run_services.bat` to start both the Web Server and the Scraper in separate windows.
+
+### 2. Manual Start
+#### Start the Web Server
 This runs the main website where users can view the news.
 ```bash
 python manage.py runserver

@@ -7,3 +7,5 @@ lxml
 python-dateutil
 facebook-scraper
 playwright
+
+Telethon
