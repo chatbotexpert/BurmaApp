@@ -1,0 +1,40 @@
+Starting scraping...
+DEBUG: Found 5 active sources
+2026-02-16 18:08:05,252 - aggregator.scrapers - INFO - Fetching RSS: CNN Asia (http://rss.cnn.com/rss/edition_asia.rss)
+2026-02-16 18:08:06,789 - aggregator.scrapers - INFO - Fetching Facebook: Zeeshan Bilal Facebook Page
+2026-02-16 18:08:16,113 - root - INFO - Page Title: Zeeshan Bilal | Facebook
+2026-02-16 18:08:16,141 - root - INFO - Unwanted popups found: 1. Closing...
+2026-02-16 18:08:16,738 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 18:08:16,868 - root - INFO - Extracted 4 raw posts from current view.
+2026-02-16 18:08:16,868 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 18:08:16,869 - root - INFO - Total collected unique posts: 3
+2026-02-16 18:08:19,896 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 18:08:20,043 - root - INFO - Extracted 6 raw posts from current view.
+2026-02-16 18:08:20,043 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 18:08:20,043 - root - INFO - Total collected unique posts: 9
+2026-02-16 18:08:27,858 - aggregator.scrapers - INFO - Fetching RSS: Geo News (https://www.geo.tv/rss/1/1)
+2026-02-16 18:08:33,630 - aggregator.scrapers - INFO - Fetching Facebook: Reuters Facebook
+2026-02-16 18:08:40,252 - root - INFO - Page Title: Reuters | Facebook
+2026-02-16 18:08:40,275 - root - INFO - Unwanted popups found: 1. Closing...
+2026-02-16 18:08:40,879 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 18:08:40,884 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 18:08:42,056 - root - INFO - Found 4 'See more' buttons.
+2026-02-16 18:08:45,317 - root - INFO - Found 4 'See more' buttons.
+2026-02-16 18:08:49,873 - root - INFO - Found 4 'See more' buttons.
+2026-02-16 18:08:54,437 - root - INFO - Found 4 'See more' buttons.
+2026-02-16 18:08:59,222 - root - INFO - Extracted 13 raw posts from current view.
+2026-02-16 18:08:59,222 - root - INFO - Sample Post Text: 'We still have hope and we still believe... it's never too late' — TV journalist Savannah Guthrie ma...
+2026-02-16 18:08:59,222 - root - INFO - Total collected unique posts: 12
+2026-02-16 18:09:15,222 - aggregator.scrapers - INFO - Fetching Facebook: NYC News
+2026-02-16 18:09:27,097 - root - INFO - Page Title: The New York Times | Facebook
+2026-02-16 18:09:27,121 - root - INFO - Unwanted popups found: 1. Closing...
+2026-02-16 18:09:27,688 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 18:09:27,693 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 18:09:28,628 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 18:09:29,541 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 18:09:30,414 - root - INFO - Found 2 'See more' buttons.
+2026-02-16 18:09:32,300 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 18:09:34,011 - root - INFO - Extracted 16 raw posts from current view.
+2026-02-16 18:09:34,011 - root - INFO - Sample Post Text: Tech companies are racing to build thousands of huge data centers to power the A.I. revolution. To f...
+2026-02-16 18:09:34,011 - root - INFO - Total collected unique posts: 15
+Successfully scraped 12 new posts

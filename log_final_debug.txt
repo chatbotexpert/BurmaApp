@@ -1,0 +1,211 @@
+Starting scraping...
+DEBUG: Found 4 active sources
+2026-02-16 17:25:59,146 - aggregator.scrapers - INFO - Fetching RSS: CNN Asia (http://rss.cnn.com/rss/edition_asia.rss)
+2026-02-16 17:26:00,638 - aggregator.scrapers - INFO - Fetching Facebook: Zeeshan Bilal Facebook Page
+2026-02-16 17:26:08,663 - root - INFO - Page Title: Zeeshan Bilal | Facebook
+2026-02-16 17:26:08,663 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:08,789 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:08,790 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:08,790 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:10,806 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:10,912 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:10,912 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:10,912 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:12,932 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:13,038 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:13,038 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:13,039 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:15,052 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:15,160 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:15,160 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:15,160 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:17,183 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:17,286 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:17,286 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:17,286 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:19,298 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:19,441 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:19,441 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:19,441 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:21,450 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:21,556 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:21,557 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:21,557 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:23,580 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:23,689 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:23,690 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:23,690 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:25,712 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:25,816 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:25,816 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:25,816 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:27,832 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:27,942 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:27,942 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:27,942 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:29,956 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:30,059 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:30,060 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:30,060 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:32,070 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:32,181 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:32,181 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:32,181 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:34,192 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:34,300 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:34,300 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:34,300 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:36,311 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:36,415 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:36,416 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:36,416 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:38,438 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:38,551 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:26:38,551 - root - INFO - Sample Post Text: Zeeshan Bilal updated their cover photo. 19 July 2024 · Shared with Public All reactions: 4 Like Com...
+2026-02-16 17:26:38,551 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:26:40,559 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:46,936 - aggregator.scrapers - INFO - Fetching RSS: Geo News (https://www.geo.tv/rss/1/1)
+2026-02-16 17:26:47,526 - aggregator.scrapers - INFO - Fetching Facebook: Reuters Facebook
+2026-02-16 17:26:57,808 - root - INFO - Page Title: Reuters | Facebook
+2026-02-16 17:26:57,808 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:26:57,831 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:26:59,368 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:00,906 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:02,437 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:03,969 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:05,627 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:27:05,627 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:27:05,627 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:27:07,647 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:27:07,653 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:09,172 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:10,709 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:12,237 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:13,774 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:15,421 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:27:15,421 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:27:15,421 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:27:17,440 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:27:17,448 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:18,968 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:20,497 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:22,032 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:23,553 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:25,207 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:27:25,207 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:27:25,207 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:27:27,220 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:27:27,225 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:28,754 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:30,319 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:31,845 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:33,369 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:35,019 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:27:35,019 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:27:35,019 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:27:37,031 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:27:37,036 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:38,567 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:40,089 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:41,617 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:43,143 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:44,794 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:27:44,794 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:27:44,794 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:27:46,818 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:27:46,823 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:48,351 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:49,876 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:51,403 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:52,935 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:54,590 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:27:54,590 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:27:54,590 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:27:56,604 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:27:56,608 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:58,133 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:27:59,666 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:01,189 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:02,713 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:04,359 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:28:04,359 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:28:04,359 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:28:06,373 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:28:06,378 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:07,910 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:09,435 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:10,970 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:12,502 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:14,145 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:28:14,146 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:28:14,146 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:28:16,166 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:28:16,171 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:17,696 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:19,223 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:20,760 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:22,284 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:23,931 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:28:23,931 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:28:23,931 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:28:25,954 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:28:25,959 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:27,486 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:29,014 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:30,542 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:32,073 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:33,713 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:28:33,713 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:28:33,713 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:28:35,727 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:28:35,732 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:37,256 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:38,775 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:40,303 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:41,825 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:43,473 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:28:43,474 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:28:43,474 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:28:45,491 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:28:45,497 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:47,034 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:48,564 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:50,093 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:51,624 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:53,275 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:28:53,275 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:28:53,275 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:28:55,289 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:28:55,295 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:56,827 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:58,359 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:28:59,884 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:01,409 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:03,064 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:29:03,064 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:29:03,064 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:29:05,084 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:29:05,089 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:06,615 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:08,140 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:09,668 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:11,200 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:12,910 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:29:12,911 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:29:12,911 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:29:14,934 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:29:14,939 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:16,464 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:17,989 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:19,516 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:21,052 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:22,714 - root - INFO - Extracted 3 raw posts from current view.
+2026-02-16 17:29:22,714 - root - INFO - Sample Post Text: A powerful storm cut power to over 30,000 properties across New Zealand's North Island, knocking dow...
+2026-02-16 17:29:22,714 - root - INFO - Total collected unique posts: 2
+2026-02-16 17:29:24,738 - root - INFO - Clicking 'See more' buttons...
+2026-02-16 17:29:24,743 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:26,278 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:27,808 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:29,334 - root - INFO - Found 1 'See more' buttons.
+2026-02-16 17:29:30,859 - root - INFO - Found 1 'See more' buttons.
+Successfully scraped 2 new posts

@@ -1,0 +1,71 @@
+python : D:\burmafinal
+\aggregator\scrapers.p
+y:152: UserWarning: A 
+low page limit (<=2) 
+might return no 
+results, try 
+increasing the limit
+At line:1 char:1
++ python manage.py 
+scrape_news > 
+scrape_debug_2.txt 
+2>&1
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (D:\burmafi   
+ nal\a...asing the    
+ limit:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+  total_new += 
+fetch_facebook(source)
+Starting scraping...
+DEBUG: Found 4 active sources
+DEBUG: Fetching RSS: CNN Asia (http://rss.cnn.com/rss/edition_asia.rss)
+DEBUG: Feed status: 200, Entries: 30
+DEBUG: Post already exists: https://www.cnn.com/travel/article/indonesia-criminal-code-tourists-intl-hnk/index.html
+DEBUG: Post already exists: https://www.cnn.com/specials/asia/afghanistan?utm_source=section
+DEBUG: Post already exists: https://www.cnn.com/specials/asia/hong-kong?utm_source=section
+DEBUG: Post already exists: https://www.cnn.com/specials/asia/japan?utm_source=section
+DEBUG: Post already exists: https://www.cnn.com/specials/asia/north-korea?utm_source=section
+DEBUG: Post already exists: https://www.cnn.com/specials/asia/pakistan?utm_source=section
+DEBUG: Post already exists: https://www.cnn.com/specials/asia/sri-lanka?utm_source=section
+DEBUG: Post already exists: https://www.cnn.com/specials/asia/taiwan?utm_source=section
+DEBUG: Post already exists: https://www.cnn.com/travel/article/nara-deer-plastic-bags-scli-intl-scn/index.html
+DEBUG: Post already exists: https://www.cnn.com/2020/01/15/asia/anjali-watson-saving-sri-lanka-leopards-scn-c2e-intl-hnk/index.html
+DEBUG: Post already exists: https://www.cnn.com/2020/01/07/asia/fukushima-wildlife-intl-scli-scn/index.html
+DEBUG: Post already exists: https://www.cnn.com/travel/article/china-high-speed-maglev-train-intl-hnk/index.html
+DEBUG: Post already exists: https://www.cnn.com/style/article/shanghai-relocate-building-preservation-intl-hnk-scli/index.html
+DEBUG: Post already exists: https://www.cnn.com/2020/12/03/tech/autox-robotaxi-china-intl-hnk/index.html
+DEBUG: Post already exists: https://www.cnn.com/travel/article/japan-travel-covid-19/index.html
+DEBUG: Post already exists: https://www.cnn.com/travel/article/sri-lanka-covid-tourism-reopening-intl-hnk/index.html
+DEBUG: Post already exists: https://www.cnn.com/travel/article/singapore-airlines-covid-vaccination-wellness-intl-hnk/index.html
+DEBUG: Post already exists: https://www.cnn.com/asia/live-news/india-general-election-results-06-04-24-intl-hnk/index.html
+DEBUG: Post already exists: https://www.cnn.com/asia/live-news/singapore-airlines-flight-turbulence-05-21-24/index.html
+DEBUG: Post already exists: https://www.cnn.com/2013/11/08/world/kashmir-fast-facts/index.html
+DEBUG: Post already exists: https://www.cnn.com/asia/live-news/taiwan-earthquake-hualien-04-04-23-hnk-intl/index.html
+DEBUG: Post already exists: https://www.cnn.com/asia/live-news/taiwan-earthquake-hualien-tsunami-warning-hnk-intl/index.html
+DEBUG: Post already exists: https://www.cnn.com/2013/10/29/world/asia/north-korea-nuclear-timeline---fast-facts/index.html
+DEBUG: Post already exists: https://www.cnn.com/2016/12/16/asia/rodrigo-duterte-fast-facts/index.html
+DEBUG: Post already exists: https://www.cnn.com/2013/10/30/world/australian-open-fast-facts/index.html
+DEBUG: Post already exists: https://www.cnn.com/asia/live-news/india-ram-mandir-ayodhya-inauguration-24-01-22-intl-hnk/index.html
+DEBUG: Post already exists: https://www.cnn.com/asia/live-news/japan-earthquake-plane-fire-news-01-02-24/index.html
+DEBUG: Post already exists: https://www.cnn.com/asia/live-news/japan-ishikawa-earthquake-01-01-24/index.html
+DEBUG: Post already exists: https://www.cnn.com/2012/12/30/world/asia/mahathir-bin-mohamad---fast-facts/index.html
+DEBUG: Post already exists: https://www.cnn.com/2023/12/08/asia/indonesia-sulawesi-nickel-ev-as-equals-intl-hnk/index.html
+DEBUG: Fetching Facebook: Zeeshan Bilal Facebook Page
+DEBUG: API Page Name: billalzeeshaan
+DEBUG: Calling get_posts for billalzeeshaan
+DEBUG: Fetching RSS: Geo News (https://www.geo.tv/)
+DEBUG: Feed status: 200, Entries: 0
+DEBUG: Feed Bozo Exception: <unknown>:75:14: not well-formed (invalid token)
+DEBUG: Fetching Facebook: Reuters Facebook
+DEBUG: API Page Name: Reuters
+DEBUG: Calling get_posts for Reuters
+Successfully scraped 0 new posts

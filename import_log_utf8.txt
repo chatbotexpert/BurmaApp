@@ -1,0 +1,84 @@
+python : Traceback 
+(most recent call 
+last):
+At line:1 char:1
++ python 
+debug_import.py > 
+import_log.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (Traceback    
+ (most recent call    
+ last)::String) [    
+], RemoteExceptio    n
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+  File "D:\burmafinal\
+debug_import.py", 
+line 6, in <module>
+    import 
+facebook_scraper
+  File "C:\Users\Hashs
+erver\AppData\Local\Pa
+ckages\PythonSoftwareF
+oundation.Python.3.11_
+qbz5n2kfra8p0\LocalCac
+he\local-packages\Pyth
+on311\site-packages\fa
+cebook_scraper\__init_
+_.py", line 13, in 
+<module>
+    from 
+.facebook_scraper 
+import FacebookScraper
+  File "C:\Users\Hashs
+erver\AppData\Local\Pa
+ckages\PythonSoftwareF
+oundation.Python.3.11_
+qbz5n2kfra8p0\LocalCac
+he\local-packages\Pyth
+on311\site-packages\fa
+cebook_scraper\faceboo
+k_scraper.py", line 
+15, in <module>
+    from 
+requests_html import 
+HTMLSession
+  File "C:\Users\Hashs
+erver\AppData\Local\Pa
+ckages\PythonSoftwareF
+oundation.Python.3.11_
+qbz5n2kfra8p0\LocalCac
+he\local-packages\Pyth
+on311\site-packages\re
+quests_html.py", line 
+14, in <module>
+    from 
+lxml.html.clean 
+import Cleaner
+  File "C:\Users\Hashs
+erver\AppData\Local\Pa
+ckages\PythonSoftwareF
+oundation.Python.3.11_
+qbz5n2kfra8p0\LocalCac
+he\local-packages\Pyth
+on311\site-packages\lx
+ml\html\clean.py", 
+line 18, in <module>
+    raise ImportError(
+ImportError: 
+lxml.html.clean 
+module is now a 
+separate project 
+lxml_html_clean.
+Install 
+lxml[html_clean] or 
+lxml_html_clean 
+directly.
+Attempting import...
+Import failed!

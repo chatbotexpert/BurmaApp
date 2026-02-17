@@ -1,0 +1,284 @@
+{% extends 'aggregator/base.html' %}
+
+{% block content %}
+<div class="feed-header">
+    <h1 class="feed-title">Social Media Aggregator</h1>
+    <p class="feed-subtitle">Get the latest news and updates from social media sources in one place.</p>
+
+    <!-- Filter Bar (Modern) -->
+    <!-- Filter Dropdown -->
+    <div class="filter-container"
+        style="display: flex; justify-content: center; margin-bottom: 3rem; position: relative; z-index: 100;">
+        <button class="filter-btn" onclick="document.getElementById('filterDropdown').classList.toggle('show')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+            Filter Source
+        </button>
+        <div id="filterDropdown" class="filter-dropdown-content">
+            <a href="?" class="{% if not request.GET.source and not request.GET.type %}active{% endif %}">
+                All Sources
+            </a>
+            <a href="?type=FACEBOOK" class="{% if request.GET.type == 'FACEBOOK' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                </svg>
+                Facebook
+            </a>
+            <a href="?type=TWITTER" class="{% if request.GET.type == 'TWITTER' %}active{% endif %}">
+                <!-- X Logo -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                    <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                </svg>
+                X (Twitter)
+            </a>
+            <a href="?type=TELEGRAM" class="{% if request.GET.type == 'TELEGRAM' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-8.609 3.33c-2.068.8-4.133 1.598-5.724 2.21a405.15 405.15 0 0 1-2.863 1.13c-1.192.501-1.794.788-2.618 1.55a2.128 2.128 0 0 0-.584 1.166c-.053.475.25.922.658 1.162.774.456 1.701.815 3.036 1.332 1.335.517 2.67 1.034 3.014 1.168a.747.747 0 0 1 .458.75c-.096.58-1.559 9.38-1.7 10.222a1.002 1.002 0 0 0 1.637.787c.75-.625 1.765-1.47 2.502-2.083.737-.613 1.474-1.226 2.147-1.787a.754.754 0 0 1 .98-.016c1.157.962 3.1 2.576 4.382 3.642.531.442 1.294.502 1.889.15a2.203 2.203 0 0 0 .96-1.12c.57-2.31 2.243-9.06 3.123-12.608.88-3.548 1.517-6.115 1.517-6.115a2.228 2.228 0 0 0-1.758-2.583 2.25 2.25 0 0 0-.426-.04z" />
+                </svg>
+                Telegram
+            </a>
+            <a href="?type=RSS" class="{% if request.GET.type == 'RSS' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 11a9 9 0 0 1 9 9" />
+                    <path d="M4 4a16 16 0 0 1 16 16" />
+                    <circle cx="5" cy="19" r="1" />
+                </svg>
+                RSS Feed
+            </a>
+        </div>
+
+        <!-- Script to close dropdown when clicking outside -->
+        <script>
+            window.onclick = function (event) {
+                if (!event.target.closest('.filter-btn')) {
+                    var dropdowns = document.getElementsByClassName("filter-dropdown-content");
+                    for (var i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+        </script>
+    </div>
+
+    <!-- Source Filter Bar -->
+    <div class="pagination" style="margin-bottom: 3rem; flex-wrap: wrap;">
+        {% for source in sources %}
+        <a href="?source={{ source.id }}"
+            class="nav-link {% if request.GET.source|add:'0' == source.id %}active{% endif %}"
+            style="border: 1px solid var(--border);">
+            {{ source.name }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="feed-grid">
+    {% for post in page_obj %}
+    <article class="news-card">
+        {% if post.image_url %}
+        <img src="{{ post.image_url }}" alt="" class="card-image" loading="lazy">
+        {% else %}
+        <div class="card-image"
+            style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); color: #64748b; font-weight: 600; min-height: 200px;">
+            {{ post.source.name }}
+        </div>
+        {% endif %}
+
+        <div class="card-content">
+            <div class="source-badge">
+                <div class="source-info">
+                    {% if post.source.icon_url %}
+                    <img src="{{ post.source.icon_url }}" alt="" class="source-icon">
+                    {% endif %}
+                    <span class="source-text">{{ post.source.name }} • {{ post.published_date|date:"M d" }}</span>
+                </div>
+                <span class="source-type-tag {{ post.source.source_type|lower }}"
+                    title="{{ post.source.get_source_type_display }}">
+                    {% if post.source.source_type == 'RSS' %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 11a9 9 0 0 1 9 9" />
+                        <path d="M4 4a16 16 0 0 1 16 16" />
+                        <circle cx="5" cy="19" r="1" />
+                    </svg>
+                    {% elif post.source.source_type == 'FACEBOOK' %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                    {% elif post.source.source_type == 'TWITTER' %}
+                    <!-- X Logo (Approximate) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                        <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                    </svg>
+                    {% elif post.source.source_type == 'TELEGRAM' %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-8.609 3.33c-2.068.8-4.133 1.598-5.724 2.21a405.15 405.15 0 0 1-2.863 1.13c-1.192.501-1.794.788-2.618 1.55a2.128 2.128 0 0 0-.584 1.166c-.053.475.25.922.658 1.162.774.456 1.701.815 3.036 1.332 1.335.517 2.67 1.034 3.014 1.168a.747.747 0 0 1 .458.75c-.096.58-1.559 9.38-1.7 10.222a1.002 1.002 0 0 0 1.637.787c.75-.625 1.765-1.47 2.502-2.083.737-.613 1.474-1.226 2.147-1.787a.754.754 0 0 1 .98-.016c1.157.962 3.1 2.576 4.382 3.642.531.442 1.294.502 1.889.15a2.203 2.203 0 0 0 .96-1.12c.57-2.31 2.243-9.06 3.123-12.608.88-3.548 1.517-6.115 1.517-6.115a2.228 2.228 0 0 0-1.758-2.583 2.25 2.25 0 0 0-.426-.04z" />
+                    </svg>
+                    {% else %}
+                    {{ post.source.get_source_type_display }}
+                    {% endif %}
+                </span>
+            </div>
+
+            <h2 class="card-title">
+                <a href="{{ post.url }}" target="_blank">
+                    {{ post.title }}
+                </a>
+            </h2>
+
+            <div class="card-excerpt">
+                <style>
+                    .content-stack {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0;
+                        border-radius: var(--radius);
+                        overflow: hidden;
+                        border: 1px solid var(--border);
+                    }
+
+                    .content-block {
+                        padding: 1.5rem;
+                    }
+
+                    .content-block.original {
+                        background-color: #ffffff;
+                        border-bottom: 1px solid var(--border);
+                    }
+
+                    .content-block.translated {
+                        background-color: #f8fafc;
+                        /* Slate 50 */
+                    }
+
+                    .content-block h4 {
+                        font-size: 0.7rem;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                        color: var(--text-secondary);
+                        margin-bottom: 0.75rem;
+                        letter-spacing: 0.05em;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    }
+
+                    .content-text {
+                        font-size: 0.95rem;
+                        color: var(--text-main);
+                        line-height: 1.7;
+                        white-space: pre-wrap;
+                    }
+
+                    .content-text p {
+                        margin-bottom: 1rem;
+                    }
+
+                    .content-text p:last-child {
+                        margin-bottom: 0;
+                    }
+                </style>
+                <div class="content-stack">
+                    <div class="content-block original">
+                        <h4>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" x2="22" y1="12" y2="12" />
+                                <path
+                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                            Original
+                        </h4>
+                        <div class="content-text">
+                            {{ post.original_content|linebreaks }}
+                        </div>
+                    </div>
+                    {% if post.translated_content %}
+                    <div class="content-block translated">
+                        <h4>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m5 8 6 6" />
+                                <path d="m4 14 6-6 2-3" />
+                                <path d="M2 5h12" />
+                                <path d="M7 2h1" />
+                                <path d="m22 22-5-10-5 10" />
+                                <path d="M14 18h6" />
+                            </svg>
+                            Burmese
+                        </h4>
+                        <div class="content-text" style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
+                            {{ post.translated_content|linebreaks }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <span>{{ post.published_date|timesince }} ago</span>
+                <a href="{{ post.url }}" target="_blank" class="read-more">
+                    Read More
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </article>
+    {% empty %}
+    <div
+        style="column-span: all; text-align: center; padding: 4rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border);">
+        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-main);">No News Found</h3>
+        <p style="color: var(--text-secondary);">Try running the scraper to fetch the latest updates.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.source %}&source={{ request.GET.source }}{% endif %}"
+        class="page-link">Previous</a>
+    {% endif %}
+
+    {% for page_num in custom_range %}
+    {% if page_num == page_obj.paginator.ELLIPSIS %}
+    <span class="page-link disabled">...</span>
+    {% else %}
+    {% if page_num == page_obj.number %}
+    <span class="page-link active">{{ page_num }}</span>
+    {% else %}
+    <a href="?page={{ page_num }}{% if request.GET.source %}&source={{ request.GET.source }}{% endif %}"
+        class="page-link">{{ page_num }}</a>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.source %}&source={{ request.GET.source }}{% endif %}"
+        class="page-link">Next</a>
+    {% endif %}
+</div>
+{% endblock %}
