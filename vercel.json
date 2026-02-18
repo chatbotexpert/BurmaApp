@@ -22,5 +22,11 @@
       "src": "/(.*)",
       "dest": "burma_news/wsgi.py"
     }
+  ],
+  "crons": [
+    {
+      "path": "/cron/scrape/",
+      "schedule": "0 * * * *"
+    }
   ]
 }
