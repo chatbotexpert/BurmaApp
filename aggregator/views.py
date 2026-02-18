@@ -3,6 +3,20 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.utils.feedgenerator import Rss201rev2Feed, Enclosure
 from .models import Post, Source
+from .scrapers import run_scraping
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def scrape_cron_view(request):
+    """
+    View to trigger scraping via Vercel Cron Job.
+    """
+    try:
+        count = run_scraping()
+        return JsonResponse({'status': 'success', 'message': f'Scraped {count} new posts.'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 class ExtendedRSSFeed(Rss201rev2Feed):
     """
