@@ -75,12 +75,35 @@ WSGI_APPLICATION = 'burma_news.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.environ.get('VERCEL') or os.environ.get('VERCEL_REGION'):
+    # Vercel-specific: Use /tmp for SQLite (ephemeral but writable)
+    # This fixes "Database is locked" or "Read-only file system" errors
+    import shutil
+    
+    ORIGINAL_DB = BASE_DIR / 'db.sqlite3'
+    TEMP_DB = Path('/tmp/db.sqlite3')
+    
+    # Copy main DB to temp if it doesn't exist there yet
+    # Note: This means data is lost on every cold boot, but needed for admin/login to work on Vercel w/o Postgres
+    if ORIGINAL_DB.exists() and not TEMP_DB.exists():
+        try:
+            shutil.copy2(ORIGINAL_DB, TEMP_DB)
+        except Exception as e:
+            print(f"Error copying DB: {e}")
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': TEMP_DB,
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
