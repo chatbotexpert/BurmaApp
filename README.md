@@ -120,3 +120,33 @@ Access `http://127.0.0.1:8000/admin/` to:
 -   `aggregator/scrapers.py`: Core logic for fetching and parsing data.
 -   `aggregator/views.py`: Controls what data is sent to the web page.
 -   `aggregator/static/aggregator/styles.css`: All visual styling for the feed.
+
+## ☁️ Deployment on Vercel
+
+### 1. Configuration
+The project is pre-configured for Vercel deployment with:
+- `vercel.json`: Defines build settings, routes, cron jobs, and lambda limits.
+- `build.sh`: A custom build script that installs dependencies and Playwright browsers.
+
+### 2. Environment Variables
+Set the following environment variables in your Vercel Project Settings:
+- `DEBUG`: `False`
+- `SECRET_KEY`: (Generate a strong random string)
+- `PLAYWRIGHT_BROWSERS_PATH`: `pw-browsers`
+
+### 3. Database (Crucial!)
+**SQLite on Vercel is ephemeral.** This means the database resets every time the function wakes up or redeploys.
+- **For Production**: You **MUST** connect an external database like **Vercel Postgres**, **Supabase**, or **Neon**.
+- **Update `settings.py`**: Configure `DATABASES` to use the external DB URL when in production.
+
+### 4. Automated Scraping (Cron Jobs)
+Since Vercel functions cannot run forever, we use **Cron Jobs** instead of `run_scheduler.py`.
+- The scraper is triggered via the URL: `/cron/scrape/`
+- **Schedule**: Defined in `vercel.json`.
+  - **Hobby Plan**: Runs once daily (`0 12 * * *` UTC).
+  - **Pro Plan**: Can run hourly (`0 * * * *`).
+
+### 5. Playwright Limitations
+Vercel Serverless Functions have a size limit (50MB compressed).
+- We attempt to install a minimal Chromium browser during the build.
+- **Risk**: If the deployment fails with "Function size too large", you may need to offload scraping to a separate service (e.g., Browserless.io) or disable the Playwright-based scrapers (Facebook/Twitter) on Vercel.
