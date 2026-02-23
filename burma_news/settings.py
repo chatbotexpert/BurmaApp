@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,7 +76,16 @@ WSGI_APPLICATION = 'burma_news.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-if os.environ.get('VERCEL') or os.environ.get('VERCEL_REGION'):
+if os.environ.get('DATABASE_URL'):
+    # Use PostgreSQL (or other DB) if DATABASE_URL is provided in production
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+elif os.environ.get('VERCEL') or os.environ.get('VERCEL_REGION'):
     # Vercel-specific: Use /tmp for SQLite (ephemeral but writable)
     # This fixes "Database is locked" or "Read-only file system" errors
     import shutil
