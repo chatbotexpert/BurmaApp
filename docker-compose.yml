@@ -27,7 +27,7 @@ services:
       - DEBUG=False
       - SECRET_KEY=django-insecure-production-key-change-this
       - DATABASE_URL=postgres://postgres:postgres@db:5432/burmanews
-      - ALLOWED_HOSTS=*
+      - ALLOWED_HOSTS=burma-news.org,www.burma-news.org,localhost
     depends_on:
       - db
     restart: unless-stopped
@@ -42,10 +42,25 @@ services:
       - DEBUG=False
       - SECRET_KEY=django-insecure-production-key-change-this
       - DATABASE_URL=postgres://postgres:postgres@db:5432/burmanews
-      - ALLOWED_HOSTS=*
+      - ALLOWED_HOSTS=burma-news.org,www.burma-news.org,localhost
     depends_on:
       - db
     restart: unless-stopped
 
 volumes:
   postgres_data:
+  caddy_data:
+  caddy_config:
+
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    command: caddy reverse-proxy --from burma-news.org --to web:8000
+    depends_on:
+      - web
