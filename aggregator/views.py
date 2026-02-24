@@ -68,23 +68,38 @@ def index(request):
 
 def feed_rss(request):
     source_id = request.GET.get('source')
+    source_type = request.GET.get('type')
     title = "Burma News Aggregator"
     link = "/feed/rss"
     description = "Latest news from Burma News Aggregator"
     
-    posts = Post.objects.all()[:50] # Limit to last 50
-    if source_id:
-        posts = posts.filter(source__id=source_id)
-
-    # Check for format=xml or User-Agent indicating a reader (optional, but format=xml is explicit)
+    if source_type:
+        title = f"{title} - {source_type.title()} Feed"
+    
     fmt = request.GET.get('format')
     
+    posts = Post.objects.all()
+    if source_id:
+        posts = posts.filter(source__id=source_id)
+        
+    if source_type:
+        posts = posts.filter(source__source_type=source_type)
+        
+    posts = posts[:50] # Limit to last 50 after filtering
+    
+    xml_link = request.build_absolute_uri(request.path) + '?format=xml'
+    if source_id:
+        xml_link += f'&source={source_id}'
+    if source_type:
+        xml_link += f'&type={source_type}'
+
     if fmt != 'xml':
         # Serve the modern HTML page
         return render(request, 'aggregator/rss_feed.html', {
             'posts': posts,
             'title': title,
             'description': description,
+            'xml_link': xml_link,
         })
         
     # --- Generate XML for RSS Readers ---

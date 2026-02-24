@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=burmanews
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  web:
+    build: .
+    # Run DB migrations before starting the web server
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn burma_news.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=django-insecure-production-key-change-this
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/burmanews
+      - ALLOWED_HOSTS=*
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  scraper:
+    build: .
+    # This overrides the CMD in the Dockerfile to run the scraper script instead
+    command: python manage.py run_scheduler
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=django-insecure-production-key-change-this
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/burmanews
+      - ALLOWED_HOSTS=*
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

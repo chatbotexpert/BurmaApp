@@ -125,13 +125,36 @@ def _normalise_facebook_url(url: Optional[str], page_url: str) -> str:
         return page_url
     url = url.strip()
     if url.startswith("http://") or url.startswith("https://"):
-        return url
-    if url.startswith("/"):
-        return "https://www.facebook.com" + url
-    if url.startswith("facebook.com"):
-        return "https://" + url
-    if url.startswith("?"):
-        return "https://www.facebook.com" + url
+        pass
+    elif url.startswith("/"):
+        url = "https://www.facebook.com" + url
+    elif url.startswith("facebook.com"):
+        url = "https://" + url
+    elif url.startswith("?"):
+        url = "https://www.facebook.com" + url
+    
+    # Strip query parameters to prevent duplicates, except 'v' for videos
+    try:
+        from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+        parsed = urlparse(url)
+        # Keep only 'v' parameter if it exists (for FB video URLs)
+        query_dict = parse_qs(parsed.query)
+        new_query = {}
+        if 'v' in query_dict:
+            new_query['v'] = query_dict['v']
+        
+        # Reconstruct the URL without tracking parameters
+        url = urlunparse((
+            parsed.scheme,
+            parsed.netloc,
+            parsed.path,
+            parsed.params,
+            urlencode(new_query, doseq=True),
+            parsed.fragment
+        ))
+    except Exception as e:
+        logging.debug(f"Error normalising URL {url}: {e}")
+        
     return url
 
 
