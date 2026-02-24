@@ -18,6 +18,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install Playwright and its OS browser dependencies (Crucial for FB & Twitter scrapers)
+# Using separate commands to prevent pulling the full desktop environment on small VMs
+RUN playwright install chromium
+RUN playwright install-deps chromium
+
 # Copy the rest of the project
 COPY . .
 
