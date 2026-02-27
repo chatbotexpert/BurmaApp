@@ -1,0 +1,24 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="newsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="600" fill="url(#newsGrad)"/>
+  <rect width="800" height="600" fill="url(#grid)"/>
+  
+  <!-- Icon Background Circle -->
+  <circle cx="400" cy="240" r="80" fill="rgba(255,255,255,0.05)"/>
+  
+  <!-- Abstract News Icon -->
+  <g transform="translate(352, 192) scale(2)" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+  </g>
+  
+  <text x="50%" y="65%" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="32" fill="white" text-anchor="middle" letter-spacing="0.05em" opacity="0.9">NEWS UPDATE</text>
+  <text x="50%" y="72%" font-family="'Plus Jakarta Sans', sans-serif" font-weight="400" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.1em" opacity="0.8">LATEST STORY</text>
+</svg>

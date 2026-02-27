@@ -1,0 +1,27 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="tgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2AABEE"/>
+      <stop offset="100%" stop-color="#229ED9"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="15" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="600" fill="url(#tgGrad)"/>
+  
+  <!-- Background decoration -->
+  <path d="M-100 500 Q 400 300 900 600" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/>
+  <path d="M-100 450 Q 400 250 900 550" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/>
+  
+  <!-- Paper Plane Icon -->
+  <g transform="translate(336, 176) scale(4)" fill="white" filter="url(#glow)">
+    <path d="M20.665,3.717l-17.73,6.837c-1.21,0.486-1.203,1.161-0.222,1.462l4.552,1.42l10.532-6.645 c0.498-0.303,0.953-0.14,0.579,0.192l-8.533,7.701l0,0l-0.002,0.002l-0.304,4.355c0.439,0,0.632-0.201,0.88-0.439l2.113-2.052 l4.383,3.237c0.808,0.446,1.387,0.216,1.589-0.75l2.875-13.545c0.294-1.179-0.448-1.713-1.637-1.177H20.665z"/>
+  </g>
+  
+  <text x="50%" y="72%" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="28" fill="white" text-anchor="middle" letter-spacing="0.05em" opacity="0.9">Telegram</text>
+</svg>
