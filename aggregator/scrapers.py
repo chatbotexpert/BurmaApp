@@ -97,7 +97,16 @@ def fetch_rss(source):
     """
     print(f"Fetching RSS feed: {source.url}")
     try:
-        feed = feedparser.parse(source.url)
+        # Use requests with a standard browser User-Agent to bypass basic bot protection
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        }
+        response = requests.get(source.url, headers=headers, timeout=10)
+        response.raise_for_status()
+        
+        # Parse the raw XML string using feedparser
+        feed = feedparser.parse(response.content)
         
         # Check for bozo (malformed feed) but try to process anyway if entries exist
         if hasattr(feed, 'bozo_exception'):
