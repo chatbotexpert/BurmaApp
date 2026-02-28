@@ -121,32 +121,34 @@ Access `http://127.0.0.1:8000/admin/` to:
 -   `aggregator/views.py`: Controls what data is sent to the web page.
 -   `aggregator/static/aggregator/styles.css`: All visual styling for the feed.
 
-## ☁️ Deployment on Vercel
+## ☁️ Deployment on Production VM (Docker + Nginx)
 
-### 1. Configuration
-The project is pre-configured for Vercel deployment with:
-- `vercel.json`: Defines build settings, routes, cron jobs, and lambda limits.
-- `build.sh`: A custom build script that installs dependencies and Playwright browsers.
+This project is configured for a robust production deployment using Docker Compose, Nginx, and Cloudflare.
 
-### 2. Environment Variables
-Set the following environment variables in your Vercel Project Settings:
-- `DEBUG`: `False`
-- `SECRET_KEY`: (Generate a strong random string)
-- `PLAYWRIGHT_BROWSERS_PATH`: `pw-browsers`
+### 1. Initial Server Setup
+1. Clone the repository to your Ubuntu VM (`/root/BurmaApp/`).
+2. Generate a secure Django `SECRET_KEY` and update it in `docker-compose.yml`.
+3. Ensure ports `80` (HTTP) and `443` (HTTPS) are open on your VM's firewall.
 
-### 3. Database (Crucial!)
-**SQLite on Vercel is ephemeral.** This means the database resets every time the function wakes up or redeploys.
-- **For Production**: You **MUST** connect an external database like **Vercel Postgres**, **Supabase**, or **Neon**.
-- **Update `settings.py`**: Configure `DATABASES` to use the external DB URL when in production.
+### 2. Docker Deployment
+The application runs in isolated containers (Web, Database, Scraper) managed by Docker Compose.
+```bash
+# Start and build all containers in the background
+docker compose up -d --build
+```
+*Note: The background scraper container (`burmaapp-scraper`) runs independently and will automatically restart if it crashes or if the server reboots.*
 
-### 4. Automated Scraping (Cron Jobs)
-Since Vercel functions cannot run forever, we use **Cron Jobs** instead of `run_scheduler.py`.
-- The scraper is triggered via the URL: `/cron/scrape/`
-- **Schedule**: Defined in `vercel.json`.
-  - **Hobby Plan**: Runs once daily (`0 12 * * *` UTC).
-  - **Pro Plan**: Can run hourly (`0 * * * *`).
+### 3. Domain & SSL Setup (Cloudflare + Certbot)
+1. In Cloudflare, create an `A` record pointing your domain (e.g., `news.hashturn.com`) to your VM's IP address.
+2. Set Cloudflare's SSL/TLS encryption mode for this domain to **Full (strict)** using a Page Rule.
+3. On your VM, create an Nginx reverse proxy configuration (`/etc/nginx/sites-available/burma_app`) that forwards traffic to `http://127.0.0.1:8000`.
+4. Run Certbot to generate and install the SSL certificate:
+```bash
+certbot --nginx -d news.hashturn.com
+```
 
-### 5. Playwright Limitations
-Vercel Serverless Functions have a size limit (50MB compressed).
-- We attempt to install a minimal Chromium browser during the build.
-- **Risk**: If the deployment fails with "Function size too large", you may need to offload scraping to a separate service (e.g., Browserless.io) or disable the Playwright-based scrapers (Facebook/Twitter) on Vercel.
+### 4. Admin Initialization
+Once the site is live, create your admin account to manage sources:
+```bash
+docker compose exec web python manage.py createsuperuser
+```
