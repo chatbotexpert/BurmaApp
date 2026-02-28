@@ -197,6 +197,11 @@ def extract_posts_from_html(html: str) -> List[Dict[str, Optional[str]]]:
 
     for post in posts:
         try:
+            # STATS
+            likes = None
+            comments = None
+            shares = None
+            
             # TEXT EXTRACTION
             post_text = ""
             msg_divs = post.find_all("div", {"data-ad-preview": "message"})
@@ -227,7 +232,7 @@ def extract_posts_from_html(html: str) -> List[Dict[str, Optional[str]]]:
             post_link = None
             for a_tag in post.find_all("a", href=True):
                 href = a_tag.get("href") or ""
-                if "/posts/" in href or "story_fbid" in href or "permalink.php" in href or "/watch/" in href or "/photo" in href or "/video" in href:
+                if "/posts/" in href or "story_fbid" in href or "permalink.php" in href or "/watch/" in href or "/photo" in href or "/video" in href or "/reel/" in href:
                     post_link = href
                     break
             
@@ -241,6 +246,11 @@ def extract_posts_from_html(html: str) -> List[Dict[str, Optional[str]]]:
                      continue
                 preview_image = src
                 break # We only want one image!
+                
+            if not preview_image:
+                 video_poster = post.find("img", attrs={"referrerpolicy": "origin-when-cross-origin"})
+                 if video_poster:
+                      preview_image = video_poster.get("src")
 
             posts_data.append(
                 {
