@@ -290,8 +290,27 @@ def remove_duplicate_posts(posts: List[Dict[str, Optional[str]]]) -> List[Dict[s
 
 
 async def close_popups(page: Page):
-    """Attempt to close common Facebook popups."""
+    """Attempt to close common Facebook popups and forcefully unlock scroll."""
     try:
+        # Force scroll bypass every time we check for popups
+        await page.evaluate("""
+            document.body.style.setProperty('overflow', 'auto', 'important');
+            document.documentElement.style.setProperty('overflow', 'auto', 'important');
+            
+            // Remove dialogs and login blocks
+            document.querySelectorAll('div[data-nosnippet="yes"], div[role="dialog"]').forEach(e => e.remove());
+            
+            // Aggressively remove large fixed/absolute overlays
+            document.querySelectorAll('*').forEach(e => {
+                const style = window.getComputedStyle(e);
+                if ((style.position === 'fixed' || style.position === 'absolute') && parseInt(style.zIndex) > 5) {
+                    if (e.offsetWidth > window.innerWidth * 0.5 && e.offsetHeight > window.innerHeight * 0.5) {
+                        e.remove();
+                    }
+                }
+            });
+        """)
+        
         # Generic close button for "See more" or login prompts
         close_buttons = page.locator('div[aria-label="Close"], div[aria-label="Decline optional cookies"], div[role="button"]:has-text("Not Now"), div[role="button"]:has-text("Close")')
         count = await close_buttons.count()
@@ -330,21 +349,6 @@ async def scrape_facebook_posts(
                  f.write(await page.content())
         
         # Bypass scroll locks and hide overlay dialogs forcefully
-        try:
-            await page.evaluate("""
-                document.body.style.overflow = 'visible';
-                document.body.style.position = 'static';
-                document.documentElement.style.overflow = 'visible';
-                document.querySelectorAll('div[data-nosnippet="yes"], div[role="dialog"]').forEach(e => {
-                    e.style.display = 'none';
-                    e.style.opacity = '0';
-                    e.style.visibility = 'hidden';
-                    e.style.pointerEvents = 'none';
-                });
-            """)
-        except Exception as e:
-            logging.debug(f"Failed to bypass scroll locks: {e}")
-            
         await close_popups(page)
         await click_see_more_buttons(page)
         
@@ -375,12 +379,13 @@ async def scrape_facebook_posts(
                 
             if consecutive_no_new_posts >= 3:
                 logging.info("No new posts found after 3 scrolls. Breaking early.")
+                await page.screenshot(path="debug_early_break.png")
                 break
             
             if len(collected) >= max_posts:
                 break
                 
-            await page.evaluate(f"window.scrollBy(0, {scroll_step});")
+            await page.keyboard.press("PageDown")
             await page.wait_for_timeout(int(scroll_delay * 1000))
             await click_see_more_buttons(page)
             scroll_count += 1
