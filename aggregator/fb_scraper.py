@@ -163,6 +163,18 @@ def _normalise_facebook_url(url: Optional[str], page_url: str) -> str:
 # ---------------------------------------------------------------------------
 
 
+def width_too_small(img_tag):
+    try:
+        w = img_tag.get("width")
+        if w and int(str(w).replace("px", "")) < 50:
+            return True
+        h = img_tag.get("height")
+        if h and int(str(h).replace("px", "")) < 50:
+            return True
+    except Exception:
+        pass
+    return False
+
 def extract_posts_from_html(html: str) -> List[Dict[str, Optional[str]]]:
     soup = BeautifulSoup(html, "html.parser")
     posts_data: List[Dict[str, Optional[str]]] = []
@@ -186,53 +198,49 @@ def extract_posts_from_html(html: str) -> List[Dict[str, Optional[str]]]:
     for post in posts:
         try:
             # TEXT EXTRACTION
-            # Try to find the user element to skip it (usually first link or strong text)
-            # But simpler: just get all text and heuristic clean.
-            # Or look for specific container: data-ad-preview="message" is sometimes used but inconsistent.
-            # Best generic method:
             post_text = ""
-            # Often text is in a div with dir="auto" inside the article
-            # But the 'message' logic from before was: div[data-ad-preview="message"]
             msg_divs = post.find_all("div", {"data-ad-preview": "message"})
             if msg_divs:
                  post_text = " ".join([msg.get_text(strip=True) for msg in msg_divs])
             else:
                  # Fallback: Get text from paragraphs or bare text not in hidden elements
-                 # This is "noisy" but better than nothing
-                 post_text = post.get_text(" ", strip=True)
+                 # Videos and multi-image posts often have specific text containers
+                 text_containers = post.find_all("div", {"dir": "auto"})
+                 # Filter out numbers (likes count) and common UI text
+                 ui_terms = {"See more", "Like", "Comment", "Share", "Send", "Reply", "View"}
+                 valid_texts = []
+                 for t_node in text_containers:
+                     txt = t_node.get_text(" ", strip=True)
+                     if txt and not any(txt == ui for ui in ui_terms) and not txt.isdigit():
+                         if len(txt) > 10: # Likely actual post text
+                             valid_texts.append(txt)
+                 
+                 if valid_texts:
+                     post_text = " ".join(valid_texts)
+                 else:
+                     post_text = post.get_text(" ", strip=True) # Final noisy fallback
 
-            # CLEANUP: Remove common noise if we grabbed the whole post text
-            # (Like "Like Comment Share", timestamps, etc if not separated)
-            
-            # LIKES / COMMENTS / SHARES (generic attempt)
-            likes = None
-            comments = None
-            shares = None
-            
-            # Try to find numbers followed by specific keywords
-            text_blob = post.get_text(" ", strip=True)
-            
             # TIME
             post_time = None
-            # Often in an 'a' tag with hovercard or aria-label, or just a timestamp class
-            # Heuristic: Find a link that looks like a date/time or use regex on all text nodes?
-            # Playwright passed HTML is rendered, so relative time strings exist.
-            # Look for <use> tags referencing time icons? No.
-            # Look for span/a with 'aria-label' containing time?
             
             # LINK
             post_link = None
             for a_tag in post.find_all("a", href=True):
                 href = a_tag.get("href") or ""
-                if "/posts/" in href or "story_fbid" in href or "permalink.php" in href or "/watch/" in href or "/photo" in href:
+                if "/posts/" in href or "story_fbid" in href or "permalink.php" in href or "/watch/" in href or "/photo" in href or "/video" in href:
                     post_link = href
                     break
             
             # IMAGE
             preview_image = None
-            img = post.find("img", attrs={"src": True})
-            if img:
-                preview_image = img.get("src")
+            
+            # Find the FIRST valid image. We skip emojis, icons, and transparent spacers.
+            for img in post.find_all("img", attrs={"src": True}):
+                src = img.get("src")
+                if "emoji.php" in src or "static.xx.fbcdn.net" in src or "data:image/svg+xml" in src or width_too_small(img):
+                     continue
+                preview_image = src
+                break # We only want one image!
 
             posts_data.append(
                 {
