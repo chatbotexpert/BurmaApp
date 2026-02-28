@@ -3,20 +3,22 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def translate_text(text, dest_lang='my'):
+def translate_text(text):
     """
-    Translates text to the destination language (default: Burmese 'my').
-    Returns the translated text or None if failed.
+    Translates text dynamically. Detects any source language and translates to English ('en').
+    Returns the translated text or original text if failed.
     """
     if not text:
         return ""
     
     try:
         translator = Translator()
-        # googletrans 4.0.0-rc1 is async-capable but basic usage is synchronous enough for small tasks
-        # However, purely sync usage might be:
+        
+        # We always want the destination to be English
+        dest_lang = 'en'
+        
         result = translator.translate(text, dest=dest_lang)
-        return result.text
+        return getattr(result, 'text', text)
     except Exception as e:
         logger.error(f"Translation error: {e}")
         return text # Return original text on failure

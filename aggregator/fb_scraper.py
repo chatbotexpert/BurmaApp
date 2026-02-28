@@ -172,8 +172,16 @@ def extract_posts_from_html(html: str) -> List[Dict[str, Optional[str]]]:
     posts = soup.find_all("div", {"role": "article"})
     
     if not posts:
-        # Fallback to class-based if role not found (though role is standard)
-        posts = soup.find_all("div", {"class": "x1n2onr6 x1ja2u2z"})
+        # Fallback 1: Common post wrapper class
+        posts = soup.find_all("div", class_=lambda c: c and "x1yztbdb" in c.split())
+        
+    if not posts:
+        # Fallback 2: data-pagelet indicating a feed unit or timeline post
+        posts = [d for d in soup.find_all("div") if isinstance(d.get("data-pagelet"), str) and ("FeedUnit_" in d.get("data-pagelet") or "ProfileTimeline" in d.get("data-pagelet"))]
+
+    if not posts:
+        # Fallback 3: If still nothing, try class x1n2onr6 x1ja2u2z
+        posts = soup.find_all("div", class_=lambda c: c and "x1n2onr6" in c.split() and "x1ja2u2z" in c.split())
 
     for post in posts:
         try:
@@ -297,13 +305,28 @@ async def scrape_facebook_posts(
         title = await page.title()
         logging.info(f"Page Title: {title}")
         
-        if "Log In" in title or "Log into" in title:
-             logging.error("Likely redirected to login page. Cookie might be invalid or expired.")
+        if "Log In" in title or "Log into" in title or title.strip() == "Facebook":
+             logging.warning("May have hit a login wall or block. Will attempt to bypass scroll locks.")
              await page.screenshot(path="login_redirect.png")
-             # Dump HTML for review
              with open("login_block.html", "w", encoding="utf-8") as f:
                  f.write(await page.content())
         
+        # Bypass scroll locks and hide overlay dialogs forcefully
+        try:
+            await page.evaluate("""
+                document.body.style.overflow = 'visible';
+                document.body.style.position = 'static';
+                document.documentElement.style.overflow = 'visible';
+                document.querySelectorAll('div[data-nosnippet="yes"], div[role="dialog"]').forEach(e => {
+                    e.style.display = 'none';
+                    e.style.opacity = '0';
+                    e.style.visibility = 'hidden';
+                    e.style.pointerEvents = 'none';
+                });
+            """)
+        except Exception as e:
+            logging.debug(f"Failed to bypass scroll locks: {e}")
+            
         await close_popups(page)
         await click_see_more_buttons(page)
         
