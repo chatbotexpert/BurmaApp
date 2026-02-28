@@ -351,6 +351,7 @@ async def scrape_facebook_posts(
         collected: List[Dict[str, Optional[str]]] = []
         scroll_count = 0
         MAX_SCROLLS = 15
+        consecutive_no_new_posts = 0
         
         while len(collected) < max_posts and scroll_count < MAX_SCROLLS:
             await close_popups(page)
@@ -362,9 +363,19 @@ async def scrape_facebook_posts(
             if len(new_posts) > 0:
                  logging.info(f"Sample Post Text: {new_posts[0].get('text', '')[:100]}...")
             
+            prev_len = len(collected)
             collected.extend(new_posts)
             collected = remove_duplicate_posts(collected)
             logging.info(f"Total collected unique posts: {len(collected)}")
+            
+            if len(collected) == prev_len:
+                consecutive_no_new_posts += 1
+            else:
+                consecutive_no_new_posts = 0
+                
+            if consecutive_no_new_posts >= 3:
+                logging.info("No new posts found after 3 scrolls. Breaking early.")
+                break
             
             if len(collected) >= max_posts:
                 break
