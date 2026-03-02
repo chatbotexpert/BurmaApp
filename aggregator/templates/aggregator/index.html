@@ -1,27 +1,223 @@
 {% extends 'aggregator/base.html' %}
 
 {% block content %}
-<div class="feed-header">
-    <h1 class="feed-title">Social Media Aggregator</h1>
-    <p class="feed-subtitle">Get the latest news and updates from social media sources in one place.</p>
+<style>
+    /* Ultra-Premium Header Styles */
+    .feed-header-wrapper {
+        position: relative;
+        text-align: center;
+        margin-bottom: 4rem;
+        padding-top: 3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-    <!-- Filter Bar (Modern) -->
+    /* Animated Ambient Background Glow */
+    .feed-header-bg-glow {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60vw;
+        height: 300px;
+        background: radial-gradient(circle at center, rgba(79, 70, 229, 0.15) 0%, rgba(79, 70, 229, 0) 70%);
+        filter: blur(60px);
+        z-index: 0;
+        pointer-events: none;
+        animation: pulseGlow 8s ease-in-out infinite alternate;
+    }
+
+    body.dark-mode .feed-header-bg-glow {
+        background: radial-gradient(circle at center, rgba(99, 102, 241, 0.25) 0%, rgba(15, 23, 42, 0) 70%);
+    }
+
+    @keyframes pulseGlow {
+        0% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.8;
+        }
+
+        100% {
+            transform: translate(-50%, -50%) scale(1.1);
+            opacity: 1;
+        }
+    }
+
+    .feed-title {
+        position: relative;
+        z-index: 1;
+        font-family: 'Plus Jakarta Sans', var(--font-sans);
+        font-size: clamp(2.8rem, 5vw, 4.5rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        line-height: 1.1;
+        margin-bottom: 1.35rem;
+        /* slightly less to compensate for added padding */
+        padding-bottom: 0.15rem;
+        /* prevent descenders from being cut off */
+        padding-top: 0.1rem;
+        /* Dynamic elegant gradient */
+        background: linear-gradient(135deg, var(--text-main) 30%, var(--primary) 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+    }
+
+    body.dark-mode .feed-title {
+        background: linear-gradient(135deg, #ffffff 20%, #818cf8 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
+    }
+
+    .feed-subtitle {
+        position: relative;
+        z-index: 1;
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 650px;
+        margin: 0 auto 3rem auto;
+        line-height: 1.7;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+    }
+
+    /* Next-Gen Glassmorphic Buttons */
+    .premium-filter-container {
+        position: relative;
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .premium-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.85rem 2rem;
+        border-radius: 99px;
+        font-family: 'Inter', var(--font-sans);
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        /* Apple-esque structural borders and shadows */
+        background: var(--surface);
+        color: var(--text-main);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow:
+            0 2px 8px -2px rgba(0, 0, 0, 0.05),
+            0 8px 24px -4px rgba(0, 0, 0, 0.02),
+            inset 0 1px 1px rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        text-decoration: none;
+        overflow: hidden;
+        position: relative;
+    }
+
+    body.dark-mode .premium-btn {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow:
+            0 4px 12px -2px rgba(0, 0, 0, 0.3),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .premium-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .premium-btn:hover {
+        transform: translateY(-2px);
+        border-color: rgba(79, 70, 229, 0.3);
+        box-shadow:
+            0 12px 28px -6px rgba(79, 70, 229, 0.15),
+            0 4px 12px -2px rgba(0, 0, 0, 0.05),
+            inset 0 1px 1px rgba(255, 255, 255, 0.9);
+        color: var(--primary);
+    }
+
+    body.dark-mode .premium-btn:hover {
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow:
+            0 12px 30px -6px rgba(99, 102, 241, 0.25),
+            0 4px 12px -2px rgba(0, 0, 0, 0.4),
+            inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        background: rgba(30, 41, 59, 0.9);
+    }
+
+    .premium-btn:hover::before {
+        opacity: 1;
+    }
+
+    .premium-btn:active {
+        transform: translateY(1px) scale(0.98);
+    }
+
+    .premium-btn svg {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s;
+        color: var(--text-secondary);
+        z-index: 1;
+        position: relative;
+    }
+
+    .premium-btn span {
+        z-index: 1;
+        position: relative;
+    }
+
+    .premium-btn:hover svg {
+        transform: scale(1.15);
+        color: var(--primary);
+    }
+
+    /* Special Styling for the RSS Action Button */
+    .premium-btn.rss-btn {
+        background: var(--background);
+        border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+
+    body.dark-mode .premium-btn.rss-btn {
+        background: rgba(15, 23, 42, 0.8);
+    }
+</style>
+
+<div class="feed-header-wrapper">
+    <div class="feed-header-bg-glow"></div>
+    <h1 class="feed-title">Social Media Aggregator</h1>
+    <p class="feed-subtitle">Get the latest news and updates from multiple platforms in one seamless feed.</p>
+
     <!-- Filter Dropdown -->
-    <div class="filter-container"
-        style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 3rem; position: relative; z-index: 100;">
-        <button class="filter-btn" onclick="document.getElementById('filterDropdown').classList.toggle('show')">
+    <div class="premium-filter-container">
+        <button class="premium-btn" onclick="document.getElementById('filterDropdown').classList.toggle('show')">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
             </svg>
-            Filter Source
+            <span>Filter Source</span>
         </button>
 
         {% if request.GET.type %}
-        <button class="filter-btn"
+        <button class="premium-btn rss-btn"
             onclick="copySourceRss('{{ request.scheme }}://{{ request.get_host }}/feed/rss?type={{ request.GET.type }}&format=xml', this)"
-            title="Copy RSS for {{ request.GET.type }}"
-            style="background: var(--surface); border-color: var(--border); color: var(--text-secondary);">
+            title="Copy RSS for {{ request.GET.type }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 11a9 9 0 0 1 9 9" />
@@ -31,10 +227,9 @@
             RSS for {{ request.GET.type|title }}
         </button>
         {% elif not request.GET.source %}
-        <button class="filter-btn"
+        <button class="premium-btn rss-btn"
             onclick="copySourceRss('{{ request.scheme }}://{{ request.get_host }}/feed/rss?format=xml', this)"
-            title="Copy RSS for All Sources"
-            style="background: var(--surface); border-color: var(--border); color: var(--text-secondary);">
+            title="Copy RSS for All Sources">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 11a9 9 0 0 1 9 9" />
@@ -86,7 +281,7 @@
         <!-- Script to close dropdown when clicking outside -->
         <script>
             window.onclick = function (event) {
-                if (!event.target.closest('.filter-btn')) {
+                if (!event.target.closest('.premium-btn') && !event.target.closest('.filter-dropdown-content')) {
                     var dropdowns = document.getElementsByClassName("filter-dropdown-content");
                     for (var i = 0; i < dropdowns.length; i++) {
                         var openDropdown = dropdowns[i];
@@ -99,21 +294,89 @@
         </script>
     </div>
 
-    <!-- Source Filter Bar -->
-    <div class="pagination" style="margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem;">
+    <!-- Source Filter Bar (Clean & Minimal) -->
+    <style>
+        .source-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            margin-bottom: 3rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .source-tag {
+            display: inline-flex;
+            align-items: stretch;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            /* Pill shape */
+            overflow: hidden;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+        .source-tag:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .source-tag.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .source-tag-name {
+            display: flex;
+            align-items: center;
+            padding: 0.4rem 0.6rem 0.4rem 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .source-tag.active .source-tag-name {
+            color: white;
+        }
+
+        .source-tag-rss {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 1rem 0 0.4rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .source-tag:hover .source-tag-rss {
+            color: var(--primary);
+        }
+
+        .source-tag.active .source-tag-rss {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .source-tag.active .source-tag-rss:hover {
+            color: white;
+        }
+    </style>
+    <div class="source-tags-container">
         {% for source in sources %}
-        <div class="source-nav-group"
-            style="display: flex; align-items: stretch; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface);">
-            <a href="?source={{ source.id }}"
-                class="nav-link {% if request.GET.source|add:'0' == source.id %}active{% endif %}"
-                style="border: none; border-radius: 0; margin: 0; flex-grow: 1; display: flex; align-items: center; padding: 0.5rem 1rem;">
+        <div class="source-tag {% if request.GET.source|add:'0' == source.id %}active{% endif %}">
+            <a href="?source={{ source.id }}" class="source-tag-name">
                 {{ source.name }}
             </a>
-            <button class="copy-source-rss"
+            <button class="source-tag-rss"
                 onclick="copySourceRss('{{ request.scheme }}://{{ request.get_host }}/feed/rss?source={{ source.id }}&format=xml', this)"
-                title="Copy Source RSS Link"
-                style="background: transparent; border: none; border-left: 1px solid var(--border); padding: 0 0.75rem; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                title="Copy RSS" aria-label="Copy RSS">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 11a9 9 0 0 1 9 9" />
                     <path d="M4 4a16 16 0 0 1 16 16" />

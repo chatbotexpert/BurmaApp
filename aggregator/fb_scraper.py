@@ -450,6 +450,12 @@ def _is_empty_normalised_post(post: Dict[str, object]) -> bool:
     text = str(post.get("text") or "").strip()
     title = str(post.get("title") or "").strip()
     image_url = post.get("image_url")
+    permalink = str(post.get("permalink") or "").lower()
+    
+    # Let video links bypass text/image requirements
+    if "/reel/" in permalink or "/video" in permalink or "/watch/" in permalink:
+        return False
+        
     if not text and (not title or title.lower() == "post") and not image_url:
         return True
     return False

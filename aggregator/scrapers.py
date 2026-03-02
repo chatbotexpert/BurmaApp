@@ -189,7 +189,7 @@ def fetch_facebook(source):
     try:
         # Fetch posts using the new scraper
         # It returns a list of dicts: title, text, image_url, permalink, published_at
-        posts = fetch_posts(source.url, limit=5)
+        posts = fetch_posts(source.url, limit=15)
         
         for post in posts:
             post_url = post.get('permalink')
@@ -268,7 +268,7 @@ def fetch_telegram(source):
     
     try:
         # Fetch posts
-        posts = fetch_telegram_posts(source.url, limit=10)
+        posts = fetch_telegram_posts(source.url, limit=20)
         
         for post in posts:
             post_url = post.get('permalink') # telegram scraper returns permalink
@@ -320,7 +320,7 @@ def fetch_twitter(source):
     
     try:
         # Fetch posts
-        posts = fetch_twitter_posts(source.url, limit=5)
+        posts = fetch_twitter_posts(source.url, limit=15)
         
         for post in posts:
             post_url = post.get('permalink')
