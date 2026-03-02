@@ -223,6 +223,10 @@ def extract_posts_from_html(html: str) -> List[Dict[str, Optional[str]]]:
                  if valid_texts:
                      post_text = " ".join(valid_texts)
                  else:
+                     # If no valid text containers found, check if it's just a login button group
+                     if "Log in" in post.get_text() or "Create new account" in post.get_text():
+                         logging.debug("Skipping post-like element that appears to be login UI.")
+                         continue
                      post_text = post.get_text(" ", strip=True) # Final noisy fallback
 
             # TIME
@@ -343,10 +347,11 @@ async def scrape_facebook_posts(
         logging.info(f"Page Title: {title}")
         
         if "Log In" in title or "Log into" in title or title.strip() == "Facebook":
-             logging.warning("May have hit a login wall or block. Will attempt to bypass scroll locks.")
-             await page.screenshot(path="login_redirect.png")
-             with open("login_block.html", "w", encoding="utf-8") as f:
+             logging.warning(f"Hit a login wall or security block. Title: {title}")
+             await page.screenshot(path="debug_fb_fail.png")
+             with open("debug_fb_fail.html", "w", encoding="utf-8") as f:
                  f.write(await page.content())
+             return [] # Abort immediately if we hit a login wall
         
         # Bypass scroll locks and hide overlay dialogs forcefully
         await close_popups(page)
