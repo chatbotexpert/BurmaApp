@@ -1,4 +1,4 @@
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 import logging
 
 logger = logging.getLogger(__name__)
@@ -12,13 +12,9 @@ def translate_text(text):
         return ""
     
     try:
-        translator = Translator()
-        
         # We always want the destination to be English
-        dest_lang = 'en'
-        
-        result = translator.translate(text, dest=dest_lang)
-        return getattr(result, 'text', text)
+        translated = GoogleTranslator(source='auto', target='en').translate(text)
+        return translated if translated else text
     except Exception as e:
         logger.error(f"Translation error: {e}")
         return text # Return original text on failure
