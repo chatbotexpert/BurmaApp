@@ -16,6 +16,9 @@ db.sqlite3-journal
 !task.md
 !implementation_plan.md
 !walkthrough.md
+debug_*.html
+debug_*.png
+
 
 # Media
 media/
