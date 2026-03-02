@@ -1,4 +1,6 @@
 @echo off
+set PYTHONUTF8=1
+chcp 65001
 echo Starting Burma News Aggregator Services...
 
 echo ----------------------------------------------------

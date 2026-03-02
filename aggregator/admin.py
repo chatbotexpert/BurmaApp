@@ -55,3 +55,10 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('source', 'published_date')
     search_fields = ('title', 'original_content', 'translated_content')
     readonly_fields = ('created_at',)
+    actions = ['delete_all_posts']
+
+    @admin.action(description='Delete ALL Posts in the database')
+    def delete_all_posts(self, request, queryset):
+        # We ignore the selected queryset and delete everything
+        count, _ = Post.objects.all().delete()
+        self.message_user(request, f"Successfully deleted {count} posts.")

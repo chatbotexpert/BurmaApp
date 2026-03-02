@@ -5,6 +5,12 @@ import sys
 
 
 def main():
+    import sys
+    # Force UTF-8 encoding for stdout and stderr to prevent Unicode errors on Windows
+    if sys.stdout.encoding != 'utf-8':
+        sys.stdout.reconfigure(encoding='utf-8')
+    if sys.stderr.encoding != 'utf-8':
+        sys.stderr.reconfigure(encoding='utf-8')
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'burma_news.settings')
     try:

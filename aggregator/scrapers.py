@@ -152,7 +152,7 @@ def fetch_rss(source):
             try:
                 Post.objects.create(
                     source=source,
-                    title=title,
+                    title=trans_title,
                     original_content=content,
                     translated_content=trans_content, # Changed: Only save content, not title
                     url=entry.link,
@@ -226,7 +226,7 @@ def fetch_facebook(source):
             try:
                 Post.objects.create(
                     source=source,
-                    title=title,
+                    title=trans_title,
                     original_content=content,
                     translated_content=trans_content, # Changed: Only save content, not title
                     url=post_url,
@@ -290,7 +290,7 @@ def fetch_telegram(source):
             try:
                 Post.objects.create(
                     source=source,
-                    title=title,
+                    title=trans_title,
                     original_content=content,
                     translated_content=trans_content,
                     url=post_url,
@@ -342,7 +342,7 @@ def fetch_twitter(source):
             try:
                 Post.objects.create(
                     source=source,
-                    title=title,
+                    title=trans_title,
                     original_content=content,
                     translated_content=trans_content,
                     url=post_url,
