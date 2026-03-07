@@ -514,7 +514,9 @@
                         margin-bottom: 0;
                     }
                 </style>
-                <div class="content-stack">
+                <div class="content-stack" {% if post.source.source_type=='RSS'
+                    %}onclick="openModal('modal-data-{{ post.id }}')" style="cursor: pointer;"
+                    title="Click to read full post" {% endif %}>
                     <div class="content-block original">
                         <h4>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -528,7 +530,7 @@
                             Original
                         </h4>
                         <div class="content-text" style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
-                            {{ post.original_content|linebreaks }}
+                            {{ post.original_content|truncatewords:40|linebreaks }}
                         </div>
                     </div>
                     {% if post.translated_content %}
@@ -547,7 +549,7 @@
                             English
                         </h4>
                         <div class="content-text">
-                            {{ post.translated_content|linebreaks }}
+                            {{ post.translated_content|truncatewords:45|linebreaks }}
                         </div>
                     </div>
                     {% endif %}
