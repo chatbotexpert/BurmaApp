@@ -7,71 +7,109 @@
         position: relative;
         text-align: center;
         margin-bottom: 4rem;
-        padding-top: 3rem;
+        padding-top: 4rem;
+        /* enhanced breathing room */
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
-    /* Animated Ambient Background Glow */
+    /* Animated Ambient Background Glow (Aurora Effect) */
     .feed-header-bg-glow {
         position: absolute;
-        top: 10%;
+        top: 0;
         left: 50%;
-        transform: translate(-50%, -50%);
-        width: 60vw;
-        height: 300px;
-        background: radial-gradient(circle at center, rgba(79, 70, 229, 0.15) 0%, rgba(79, 70, 229, 0) 70%);
-        filter: blur(60px);
+        transform: translateX(-50%);
+        width: 80vw;
+        height: 600px;
+        background:
+            radial-gradient(circle at 30% 20%, rgba(79, 70, 229, 0.12) 0%, transparent 50%),
+            radial-gradient(circle at 70% 40%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
+        filter: blur(80px);
         z-index: 0;
         pointer-events: none;
         animation: pulseGlow 8s ease-in-out infinite alternate;
     }
 
     body.dark-mode .feed-header-bg-glow {
-        background: radial-gradient(circle at center, rgba(99, 102, 241, 0.25) 0%, rgba(15, 23, 42, 0) 70%);
+        background:
+            radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
+            radial-gradient(circle at 70% 40%, rgba(192, 132, 252, 0.15) 0%, transparent 50%);
     }
 
     @keyframes pulseGlow {
         0% {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 0.8;
+            transform: translateX(-50%) scale(1);
+            opacity: 0.7;
         }
 
         100% {
-            transform: translate(-50%, -50%) scale(1.1);
+            transform: translateX(-50%) scale(1.15);
             opacity: 1;
         }
     }
 
+    /* Next-Gen Pill Badge */
+    .hero-badge {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        border-radius: 999px;
+        background: rgba(79, 70, 229, 0.08);
+        border: 1px solid rgba(79, 70, 229, 0.2);
+        color: var(--primary);
+        font-family: 'Inter', var(--font-sans);
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    body.dark-mode .hero-badge {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.25);
+        color: #a5b4fc;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
+    }
+
+    /* Animated Gradient Text */
     .feed-title {
         position: relative;
         z-index: 1;
         font-family: 'Plus Jakarta Sans', var(--font-sans);
-        font-size: clamp(2.8rem, 5vw, 4.5rem);
+        font-size: clamp(3rem, 6vw, 5rem);
         font-weight: 800;
         letter-spacing: -0.05em;
         line-height: 1.1;
-        margin-bottom: 1.35rem;
-        /* slightly less to compensate for added padding */
+        margin-bottom: 1.25rem;
         padding-bottom: 0.15rem;
-        /* prevent descenders from being cut off */
         padding-top: 0.1rem;
-        /* Dynamic elegant gradient */
-        background: linear-gradient(135deg, var(--text-main) 30%, var(--primary) 100%);
-        background-clip: text;
+        background: linear-gradient(to right, var(--text-main) 20%, var(--primary) 50%, var(--text-main) 80%);
+        background-size: 200% auto;
+        color: transparent;
         -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        background-clip: text;
+        animation: textShine 8s linear infinite;
         display: inline-block;
     }
 
     body.dark-mode .feed-title {
-        background: linear-gradient(135deg, #ffffff 20%, #818cf8 100%);
-        background-clip: text;
+        background: linear-gradient(to right, #ffffff 20%, #c084fc 40%, #818cf8 60%, #ffffff 80%);
+        background-size: 200% auto;
+        color: transparent;
         -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
+        background-clip: text;
+        text-shadow: 0 10px 40px rgba(139, 92, 246, 0.2);
+    }
+
+    @keyframes textShine {
+        to {
+            background-position: 200% center;
+        }
     }
 
     .feed-subtitle {
@@ -79,10 +117,10 @@
         z-index: 1;
         font-size: 1.2rem;
         color: var(--text-secondary);
-        max-width: 650px;
+        max-width: 600px;
         margin: 0 auto 3rem auto;
-        line-height: 1.7;
-        font-weight: 500;
+        line-height: 1.6;
+        font-weight: 400;
         letter-spacing: -0.01em;
     }
 
@@ -201,6 +239,7 @@
 
 <div class="feed-header-wrapper">
     <div class="feed-header-bg-glow"></div>
+    <div class="hero-badge">✨ Live Real-Time Feed</div>
     <h1 class="feed-title">Social Media Aggregator</h1>
     <p class="feed-subtitle">Get the latest news and updates from multiple platforms in one seamless feed.</p>
 

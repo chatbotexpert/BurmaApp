@@ -1,6 +1,7 @@
 import os
 import logging
 import time
+import re
 from openai import OpenAI
 
 logger = logging.getLogger(__name__)
@@ -9,6 +10,12 @@ logger = logging.getLogger(__name__)
 deepseek_api_key = os.environ.get("DEEPSEEK_API_KEY", "")
 client = OpenAI(api_key=deepseek_api_key, base_url="https://api.deepseek.com") if deepseek_api_key else None
 
+def contains_burmese(text):
+    """
+    Checks if the text contains any Burmese characters.
+    """
+    return bool(re.search(r'[\u1000-\u109f\uaa60-\uaa7f\ua9e0-\ua9ff]', text))
+
 def translate_text(text):
     """
     Translates Burmese text to English using DeepSeek LLM.
@@ -16,6 +23,12 @@ def translate_text(text):
     """
     if not text:
         return ""
+        
+    # Language Bypass Filter: If there are no Burmese characters, 
+    # assume it's English/Western and bypass the LLM. 
+    # This prevents English -> Chinese translation hallucinations.
+    if not contains_burmese(text):
+        return text
         
     if not client:
         logger.warning("No DEEPSEEK_API_KEY set. Returning original text.")
