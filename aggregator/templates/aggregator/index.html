@@ -577,8 +577,10 @@
                             {% if post.source.icon_url %}
                             <img src="{{ post.source.icon_url }}" alt="" class="source-icon">
                             {% endif %}
-                            <span class="source-text">{{ post.source.name }} • {{ post.published_date|date:"M d, Y"
-                                }}</span>
+                            <span class="source-text">
+                                {{ post.source.name }} •
+                                {{ post.published_date|date:"M d, Y" }}
+                            </span>
                         </div>
                         <h2 class="modal-post-title"><a href="{{ post.url }}" target="_blank">{{ post.title }}</a></h2>
                         <div class="modal-content-stack">
