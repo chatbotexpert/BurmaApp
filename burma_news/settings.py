@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from pathlib import Path
 import dj_database_url
 
@@ -172,7 +176,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # Scraper Settings
-FACEBOOK_COOKIE_STRING = os.environ.get('FACEBOOK_COOKIE_STRING', "sb=fJWlaQOAU4JaaHRtVGzPc2Vr; datr=fJWladQM7IAIROs1QQYEKq5N; c_user=623430184; xs=24%3ATzkrXLxc78lXmA%3A2%3A1772460055%3A-1%3A-1%3A-1%3AAacy78z; presence=C%7B%22t%22%3A%22o%22%2C%22i%22%3A%22sc.141; wd=1424x444; fr=1rcJffqTPwN4LLtjv.AWee-5qCgiqUkZJqKdcosPYFGlZnRajbZiBYDD2NAlvd; locale=en_GB")
+FACEBOOK_COOKIE_STRING = os.environ.get('FACEBOOK_COOKIE_STRING', "sb=fJWlaQOAU4JaaHRVGzPc2Vr; datr=fJWladQM7IAIROs1QQYEKq5N; c_user=623430184; xs=24%3ATzkrXLxc78lXmA%3A2%3A1772460055%3A-1%3A-1%3A%3AAcy78z; fr=1rcJfqTPwN4LLtjv.AWee-5qCgiqUkZJqKdcosPYFGlZnRajbZiBYDD2NAlvd; presence=C%7B%22t3%22%3A%5B%7B%22o%22%3A0%2C%22i%22%3A%22%3A%22sc.141; wd=1424x444; locale=en_GB")
 SELENIUM_HEADLESS = True
 
 

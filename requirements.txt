@@ -16,3 +16,5 @@ psycopg2-binary
 pysocks
 openai
 newspaper3k
+python-dotenv
+
