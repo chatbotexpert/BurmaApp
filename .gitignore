@@ -26,3 +26,5 @@ media/
 # IDE/Editor
 .vscode/
 .idea/
+.env
+
