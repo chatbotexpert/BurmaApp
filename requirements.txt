@@ -17,4 +17,4 @@ pysocks
 openai
 newspaper3k
 python-dotenv
-
+lxml_html_clean
