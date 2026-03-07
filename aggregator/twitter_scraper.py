@@ -1,140 +1,90 @@
+import requests
+import json
 from datetime import datetime
 from django.utils import timezone
-from django.conf import settings
-import time
-from typing import List, Dict, Optional
-
-# Try importing sync_playwright, handle error if not installed
-try:
-    from playwright.sync_api import sync_playwright
-except ImportError:
-    sync_playwright = None
+from bs4 import BeautifulSoup
+from typing import List, Dict
 
 def fetch_twitter_posts(username: str, limit: int = 5) -> List[Dict]:
     """
-    Scrapes tweets from a public Twitter profile using Playwright.
-    
-    Args:
-        username (str): The Twitter username (without @).
-        limit (int): Number of tweets to try and fetch.
-        
-    Returns:
-        List[Dict]: A list of dictionaries with 'title', 'text', 'image_url', 'permalink', 'published_at'.
+    Scrapes tweets from a public Twitter profile using the official Syndication API.
+    This works reliably without login or headless browsers and is extremely fast.
     """
-    if not sync_playwright:
-        print("Playwright not installed. Cannot scrape Twitter.")
-        return []
-
-    # Clean username if full URL is passed
     if "twitter.com/" in username:
         username = username.split("twitter.com/")[-1].split("/")[0]
     elif "x.com/" in username:
         username = username.split("x.com/")[-1].split("/")[0]
         
     username = username.strip().strip('@')
-    url = f"https://x.com/{username}"
+    url = f"https://syndication.twitter.com/srv/timeline-profile/screen-name/{username}"
     
     posts = []
     
     try:
-        with sync_playwright() as p:
-            # Launch browser (headless=True for background execution)
-            # Use a proxy if configured in environment, else None
-            headless_mode = getattr(settings, 'SELENIUM_HEADLESS', True)
-            browser = p.chromium.launch(headless=headless_mode)
+        print(f"🔹 Fetching tweets for {username} via Syndication API...")
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
+        }
+        res = requests.get(url, headers=headers, timeout=15)
+        res.raise_for_status()
+        
+        soup = BeautifulSoup(res.text, 'html.parser')
+        script_tag = soup.find('script', id='__NEXT_DATA__')
+        
+        if not script_tag:
+            print(f"❌ Could not find tweet data for {username}. X.com might have blocked syndication.")
+            return []
             
-            context = browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-            )
-            page = context.new_page()
+        data = json.loads(script_tag.string)
+        entries = data.get('props', {}).get('pageProps', {}).get('timeline', {}).get('entries', [])
+        
+        print("✅ Tweets API data loaded!")
+        
+        for entry in entries:
+            if len(posts) >= limit:
+                break
+                
+            tweet_data = entry.get('content', {}).get('tweet', {})
+            if not tweet_data:
+                continue
+                
+            text = tweet_data.get('text', '')
+            tweet_id = tweet_data.get('id_str', '')
             
-            print(f"🔹 Navigating to {url} ...")
+            if not text and not tweet_id:
+                continue
+                
+            # Extract image if exists
+            image_url = None
+            media_list = tweet_data.get('entities', {}).get('media', [])
+            if media_list and len(media_list) > 0:
+                # Prioritize 'media_url_https'
+                image_url = media_list[0].get('media_url_https')
             
-            try:
-                page.goto(url, timeout=60000)
-            except Exception as e:
-                print(f"❌ Connection failed: {e}")
-                print("⚠️ REMINDER: You need a System VPN or Proxy to access X if it is blocked in your region.")
-                browser.close()
-                return []
-
-            # Wait for tweets
-            try:
-                # Wait for the timeline to load
-                page.wait_for_selector('[data-testid="tweet"]', timeout=20000)
-                print("✅ Tweets loaded!")
-            except Exception:
-                print("❌ Timed out waiting for tweets. (Are you logged in? Is the VPN on?)")
-                browser.close()
-                return []
-
-            # Scroll to trigger lazy loading
-            for _ in range(3):
-                page.mouse.wheel(0, 1000)
-                time.sleep(1.5)
-
-            # Extract tweets
-            tweet_elements = page.locator('[data-testid="tweet"]').all()
-            print(f"Found {len(tweet_elements)} tweets.")
-            
-            for i, tweet in enumerate(tweet_elements):
-                if len(posts) >= limit:
-                    break
-                    
+            # Publish Date Format: 'Sat Mar 07 19:12:34 +0000 2026'
+            created_at_str = tweet_data.get('created_at', '')
+            published_at = timezone.now()
+            if created_at_str:
                 try:
-                    # 1. Text
-                    text_el = tweet.locator('[data-testid="tweetText"]').first
-                    text = text_el.inner_text() if text_el.count() > 0 else ""
-                    
-                    # 2. Image
-                    image_url = None
-                    photo = tweet.locator('[data-testid="tweetPhoto"] img').first
-                    if photo.count() > 0:
-                        image_url = photo.get_attribute("src")
-                        
-                    # 3. Permalink & ID
-                    # The timestamp is usually a link in the format /username/status/ID
-                    time_el = tweet.locator('time').first
-                    permalink = None
-                    published_at = timezone.now()
-                    
-                    if time_el.count() > 0:
-                        datetime_str = time_el.get_attribute("datetime")
-                        if datetime_str:
-                            try:
-                                published_at = datetime.fromisoformat(datetime_str.replace('Z', '+00:00'))
-                            except ValueError:
-                                pass
-                        
-                        # Find the parent anchor tag for the permalink
-                        # Playwright locator logic: time element -> parent -> attribute href
-                        link_el = tweet.locator('a[href*="/status/"]').first
-                        if link_el.count() > 0:
-                            href = link_el.get_attribute("href")
-                            if href:
-                                permalink = f"https://x.com{href}" if href.startswith('/') else href
-
-                    if not permalink:
-                        # Fallback if we can't find link
-                        continue
-                        
-                    if not text and not image_url:
-                        continue
-                        
-                    posts.append({
-                        "title": text[:100] + "..." if len(text) > 100 else text, # Use truncated text as title
-                        "text": text,
-                        "image_url": image_url,
-                        "permalink": permalink,
-                        "published_at": published_at
-                    })
-                    
-                except Exception as e:
-                    print(f"Error parsing tweet {i}: {e}")
-                    continue
+                    parsed_date = datetime.strptime(created_at_str, '%a %b %d %H:%M:%S %z %Y')
+                    published_at = parsed_date
+                except ValueError:
+                    pass
             
-            browser.close()
+            permalink = f"https://x.com/{username}/status/{tweet_id}"
+            title = text[:100] + "..." if len(text) > 100 else text
             
+            posts.append({
+                "title": title if title else f"Tweet {tweet_id}",
+                "text": text,
+                "image_url": image_url,
+                "permalink": permalink,
+                "published_at": published_at
+            })
+            
+        print(f"Found {len(posts)} tweets.")
+        
     except Exception as e:
         print(f"Twitter Scraper Error: {e}")
         
