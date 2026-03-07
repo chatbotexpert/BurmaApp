@@ -500,6 +500,16 @@ def _normalise_post(raw: Dict[str, Optional[str]], page_url: str) -> Dict[str, o
 
 def fetch_posts(page_url: str, limit: int = 5, headless: bool | None = None) -> List[Dict[str, object]]:
     cookie_string = getattr(settings, 'FACEBOOK_COOKIE_STRING', '')
+    
+    # Override with database setting if it exists
+    try:
+        from aggregator.models import ScraperSettings
+        settings_obj = ScraperSettings.objects.first()
+        if settings_obj and settings_obj.facebook_cookie_string:
+            cookie_string = settings_obj.facebook_cookie_string
+    except Exception as e:
+        logging.warning(f"Failed to load Facebook cookie from DB: {e}")
+
     if not cookie_string:
         logging.warning("FACEBOOK_COOKIE_STRING is empty. Scraping will likely fail/redirect to login.")
         # Proceeding anyway as some public pages might show content, but usually not.

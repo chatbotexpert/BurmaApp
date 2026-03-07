@@ -64,6 +64,7 @@ class Post(models.Model):
 class ScraperSettings(models.Model):
     scraping_interval = models.IntegerField(default=60, help_text="Interval in minutes between scrape runs")
     delete_old_posts_after_days = models.IntegerField(default=7, help_text="Number of days to keep posts. 0 to disable auto-delete.")
+    facebook_cookie_string = models.TextField(blank=True, null=True, help_text="Paste your full Facebook session cookie string here (e.g. sb=...; c_user=...; xs=...;). This overrides the environment variable.")
     
     class Meta:
         verbose_name_plural = "Scraper Settings"

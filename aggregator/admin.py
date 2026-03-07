@@ -3,7 +3,12 @@ from .models import Source, Post, ScraperSettings
 
 @admin.register(ScraperSettings)
 class ScraperSettingsAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'scraping_interval')
+    list_display = ('__str__', 'scraping_interval', 'has_facebook_cookie')
+    
+    def has_facebook_cookie(self, obj):
+        return bool(obj.facebook_cookie_string)
+    has_facebook_cookie.short_description = 'Has Custom FB Cookie'
+    has_facebook_cookie.boolean = True
     
     def has_add_permission(self, request):
         # Only allow adding if no instance exists
@@ -22,6 +27,32 @@ class SourceAdmin(admin.ModelAdmin):
     list_display = ('name', 'source_type', 'url', 'is_active')
     list_filter = ('source_type', 'is_active')
     search_fields = ('name', 'url')
+    actions = ['trigger_scrape']
+
+    @admin.action(description='Trigger Scrape for Selected Sources')
+    def trigger_scrape(self, request, queryset):
+        from aggregator.scrapers import fetch_rss, fetch_facebook, fetch_telegram, fetch_twitter
+        count = 0
+        for source in queryset:
+            count += 1
+            def scrape_single_source(src):
+                try:
+                    if src.source_type == 'RSS':
+                        fetch_rss(src)
+                    elif src.source_type == 'FACEBOOK':
+                        fetch_facebook(src)
+                    elif src.source_type == 'TELEGRAM':
+                        fetch_telegram(src)
+                    elif src.source_type == 'TWITTER':
+                        fetch_twitter(src)
+                except Exception as e:
+                    import logging
+                    logging.getLogger(__name__).error(f"Background scrape failed for {src.name}: {e}")
+                    
+            thread = threading.Thread(target=scrape_single_source, args=(source,))
+            thread.daemon = True
+            thread.start()
+        self.message_user(request, f"Triggered background scrape for {count} source(s). Check console logs for progress.")
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
