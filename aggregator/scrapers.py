@@ -8,6 +8,7 @@ from time import mktime
 from django.utils import timezone
 from .models import Source, Post
 from .translator import translate_text
+from newspaper import Article
 
 # Configure logging to stdout
 logging.basicConfig(
@@ -129,6 +130,53 @@ def fetch_rss(source):
             content = ""
             title = entry.title
             
+            # Fetch Full Article Text using newspaper3k
+            try:
+                # Add headers to bypass 403 Forbidden on some sites
+                headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+                response = requests.get(entry.link, headers=headers, timeout=10)
+                html = response.text
+                
+                article = Article(entry.link)
+                article.set_html(html)
+                article.parse()
+                
+                # Newspaper3k often fails on Burmese text because it uses space-based word counting 
+                # to finding "content" text blocks. If text is short or is a menu item, use fallback.
+                if article.text and len(article.text) > 150 and "what are you looking for" not in article.text.lower():
+                    content = article.text
+                else:
+                    # Fallback: Parse with BeautifulSoup and extract <p> tags
+                    soup = BeautifulSoup(html, 'html.parser')
+                    
+                    # Try to find the main article container
+                    article_container = soup.find('article') or soup.find(class_='entry-content') or soup.find(class_='post-content') or soup.find(class_='content')
+                    
+                    if article_container:
+                        paragraphs = article_container.find_all('p')
+                        if paragraphs:
+                            content = '\n\n'.join(p.get_text(separator=' ', strip=True) for p in paragraphs if p.get_text(strip=True))
+                        else:
+                            content = article_container.get_text(separator='\n', strip=True)
+                    else:
+                        # Last ditch: grab all paragraphs in body
+                        paragraphs = soup.find('body').find_all('p') if soup.find('body') else []
+                        if paragraphs:
+                            content = '\n\n'.join(p.get_text(separator=' ', strip=True) for p in paragraphs if p.get_text(strip=True))
+                            
+            except Exception as e:
+                logger.warning(f"Could not extract full article from {entry.link}: {e}")
+                
+            # Fallback to feed summary if extraction failed
+            if not content:
+                if 'content' in entry:
+                    # Some feeds provide full content as HTML
+                    soup = BeautifulSoup(entry.content[0].value, 'html.parser')
+                    content = soup.get_text(separator='\n', strip=True)
+                elif 'summary' in entry:
+                    soup = BeautifulSoup(entry.summary, 'html.parser')
+                    content = soup.get_text(separator='\n', strip=True)
+            
             # Extract Image
             image_url = _extract_rss_image(entry)
             
@@ -140,7 +188,7 @@ def fetch_rss(source):
             if not _is_valid_image(image_url):
                  image_url = None
             
-            # Fallback: If content is empty, use title
+            # Final Fallback: If content is empty, use title
             if not content and title:
                 content = title
 
