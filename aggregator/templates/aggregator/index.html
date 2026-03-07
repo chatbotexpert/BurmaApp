@@ -514,72 +514,13 @@
                         margin-bottom: 0;
                     }
                 </style>
-                <div class="content-stack" {% if post.source.source_type=='RSS'
-                    %}onclick="openModal('modal-data-{{ post.id }}')" style="cursor: pointer;"
-                    title="Click to read full post" {% endif %}>
-                    <div class="content-block original">
-                        <h4>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10" />
-                                <line x1="2" x2="22" y1="12" y2="12" />
-                                <path
-                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                            </svg>
-                            Original
-                        </h4>
-                        <div class="content-text" style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
-                            {{ post.original_content|truncatewords:40|linebreaks }}
-                        </div>
-                    </div>
-                    {% if post.translated_content %}
-                    <div class="content-block translated">
-                        <h4>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="m5 8 6 6" />
-                                <path d="m4 14 6-6 2-3" />
-                                <path d="M2 5h12" />
-                                <path d="M7 2h1" />
-                                <path d="m22 22-5-10-5 10" />
-                                <path d="M14 18h6" />
-                            </svg>
-                            English
-                        </h4>
-                        <div class="content-text">
-                            {{ post.translated_content|truncatewords:45|linebreaks }}
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="card-footer">
-                <span>{{ post.published_date|timesince }} ago</span>
                 {% if post.source.source_type == 'RSS' %}
-                <button onclick="openModal('modal-data-{{ post.id }}')" class="read-more"
-                    style="background: none; border: none; font: inherit; cursor: pointer; padding: 0; display: inline-flex;">
-                    Read More
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                    </svg>
-                </button>
-                <!-- Hidden data for modal -->
-                <template id="modal-data-{{ post.id }}">
-                    <div class="modal-source-info">
-                        {% if post.source.icon_url %}
-                        <img src="{{ post.source.icon_url }}" alt="" class="source-icon">
+                <div class="content-stack" onclick="openModal('modal-data-{{ post.id }}')" style="cursor: pointer;"
+                    title="Click to read full post">
+                    {% else %}
+                    <div class="content-stack">
                         {% endif %}
-                        <span class="source-text">{{ post.source.name }} • {{ post.published_date|date:"M d, Y"
-                            }}</span>
-                    </div>
-                    <h2 class="modal-post-title"><a href="{{ post.url }}" target="_blank">{{ post.title }}</a></h2>
-                    <div class="modal-content-stack">
-                        <div class="modal-content-block original">
+                        <div class="content-block original">
                             <h4>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -591,11 +532,12 @@
                                 </svg>
                                 Original
                             </h4>
-                            <div class="modal-content-text" style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
-                                {{ post.original_content|linebreaks }}</div>
+                            <div class="content-text" style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
+                                {{ post.original_content|truncatewords:40|linebreaks }}
+                            </div>
                         </div>
                         {% if post.translated_content %}
-                        <div class="modal-content-block translated">
+                        <div class="content-block translated">
                             <h4>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -609,35 +551,97 @@
                                 </svg>
                                 English
                             </h4>
-                            <div class="modal-content-text">{{ post.translated_content|linebreaks }}</div>
+                            <div class="content-text">
+                                {{ post.translated_content|truncatewords:45|linebreaks }}
+                            </div>
                         </div>
                         {% endif %}
                     </div>
-                    <div class="modal-actions">
-                        <a href="{{ post.url }}" target="_blank" class="premium-btn" style="text-decoration: none;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                <polyline points="15 3 21 3 21 9"></polyline>
-                                <line x1="10" y1="14" x2="21" y2="3"></line>
-                            </svg>
-                            <span>Read Original Source</span>
-                        </a>
-                    </div>
-                </template>
-                {% else %}
-                <a href="{{ post.url }}" target="_blank" class="read-more">
-                    Read More
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                    </svg>
-                </a>
-                {% endif %}
+                </div>
+
+                <div class="card-footer">
+                    <span>{{ post.published_date|timesince }} ago</span>
+                    {% if post.source.source_type == 'RSS' %}
+                    <button onclick="openModal('modal-data-{{ post.id }}')" class="read-more"
+                        style="background: none; border: none; font: inherit; cursor: pointer; padding: 0; display: inline-flex;">
+                        Read More
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </button>
+                    <!-- Hidden data for modal -->
+                    <template id="modal-data-{{ post.id }}">
+                        <div class="modal-source-info">
+                            {% if post.source.icon_url %}
+                            <img src="{{ post.source.icon_url }}" alt="" class="source-icon">
+                            {% endif %}
+                            <span class="source-text">{{ post.source.name }} • {{ post.published_date|date:"M d, Y"
+                                }}</span>
+                        </div>
+                        <h2 class="modal-post-title"><a href="{{ post.url }}" target="_blank">{{ post.title }}</a></h2>
+                        <div class="modal-content-stack">
+                            <div class="modal-content-block original">
+                                <h4>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="2" x2="22" y1="12" y2="12" />
+                                        <path
+                                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                    </svg>
+                                    Original
+                                </h4>
+                                <div class="modal-content-text"
+                                    style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
+                                    {{ post.original_content|linebreaks }}</div>
+                            </div>
+                            {% if post.translated_content %}
+                            <div class="modal-content-block translated">
+                                <h4>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="m5 8 6 6" />
+                                        <path d="m4 14 6-6 2-3" />
+                                        <path d="M2 5h12" />
+                                        <path d="M7 2h1" />
+                                        <path d="m22 22-5-10-5 10" />
+                                        <path d="M14 18h6" />
+                                    </svg>
+                                    English
+                                </h4>
+                                <div class="modal-content-text">{{ post.translated_content|linebreaks }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="modal-actions">
+                            <a href="{{ post.url }}" target="_blank" class="premium-btn" style="text-decoration: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                                <span>Read Original Source</span>
+                            </a>
+                        </div>
+                    </template>
+                    {% else %}
+                    <a href="{{ post.url }}" target="_blank" class="read-more">
+                        Read More
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
     </article>
     {% empty %}
     <div
