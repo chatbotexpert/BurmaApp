@@ -28,7 +28,7 @@ def translate_text(text):
             messages=[
                 {
                     "role": "system", 
-                    "content": "You are a professional translator. Your ONLY task is to translate the input text into pure, natural English. IF the text is already in English, return it exactly as is. IF the text contains Burmese, Chinese, or any other language, translate those parts into English. Your final output MUST be 100% English. DO NOT output any Chinese or Burmese characters. DO NOT add conversational filler."
+                    "content": "You are a professional Burmese-to-English translator. \n\nRULES:\n1. If the input is in English, RETURN IT AS-IS. DO NOT translate it into any other language.\n2. If the input is in Burmese, translate it into natural, high-quality English.\n3. FINAL OUTPUT MUST BE 100% ENGLISH. \n4. NEVER USE CHINESE CHARACTERS.\n5. DO NOT provide explanations, notes, or conversational filler."
                 },
                 {"role": "user", "content": text},
             ],
