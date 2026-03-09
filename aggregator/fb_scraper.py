@@ -457,7 +457,11 @@ async def scrape_facebook_posts(
             fallback_url = profile_url.replace("www.facebook.com", "web.facebook.com")
             logging.info(f"Attempting fallback to variant URL: {fallback_url}")
             blocked = await try_scrape_url(fallback_url)
-        
+            
+        if blocked:
+            logging.warning(f"Both primary and fallback URLs are blocked for {profile_url}. Aborting extraction.")
+            return []
+
         # Bypass scroll locks and hide overlay dialogs forcefully
         await close_popups(page)
         await click_see_more_buttons(page)
