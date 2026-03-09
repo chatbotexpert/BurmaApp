@@ -28,3 +28,8 @@ media/
 .idea/
 .env
 debug_early_break.png
+fb_dom.html
+nytimes_dom.html
+test_fb.py
+test_fb_dom.py
+test_trunc.py

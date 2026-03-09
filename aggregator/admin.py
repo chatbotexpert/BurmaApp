@@ -1,42 +1,9 @@
 from django.contrib import admin
-from django.urls import path, reverse
-from django.shortcuts import redirect
-from django.utils.html import format_html
-import threading
-from .models import Source, Post, ScraperSettings
 from .models import Source, Post, ScraperSettings
 
 @admin.register(ScraperSettings)
 class ScraperSettingsAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'scraping_interval', 'has_facebook_cookie', 'run_scraper_button')
-    
-    def get_urls(self):
-        urls = super().get_urls()
-        custom_urls = [
-            path('run-global-scrape/', self.admin_site.admin_view(self.run_global_scrape), name='aggregator_scrapersettings_run_global_scrape'),
-        ]
-        return custom_urls + urls
-
-    def run_global_scrape(self, request):
-        from aggregator.scrapers import run_scraping
-        def bg_scrape():
-            try:
-                run_scraping()
-            except Exception as e:
-                import logging
-                logging.getLogger(__name__).error(f"Global scrape failed: {e}")
-        thread = threading.Thread(target=bg_scrape)
-        thread.daemon = True
-        thread.start()
-        self.message_user(request, "Global scraper started in the background! Please check console logs.")
-        return redirect('admin:aggregator_scrapersettings_changelist')
-
-    def run_scraper_button(self, obj):
-        return format_html(
-            '<a class="button" href="{}" style="background-color: #4f46e5; color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold;">▶ Run Scraper Now</a>',
-            reverse('admin:aggregator_scrapersettings_run_global_scrape')
-        )
-    run_scraper_button.short_description = 'Actions'
+    list_display = ('__str__', 'scraping_interval', 'has_facebook_cookie')
     
     def has_facebook_cookie(self, obj):
         return bool(obj.facebook_cookie_string)
@@ -52,6 +19,8 @@ class ScraperSettingsAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         # Disallow deleting the settings
         return False
+
+import threading
 
 @admin.register(Source)
 class SourceAdmin(admin.ModelAdmin):
