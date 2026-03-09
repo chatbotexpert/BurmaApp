@@ -553,7 +553,7 @@
                         margin-bottom: 0;
                     }
                 </style>
-                {% if post.source.source_type == 'RSS' %}
+                {% if post.source.source_type == 'RSS' or post.source.source_type == 'FACEBOOK' %}
                 <div class="content-stack" onclick="openModal('modal-data-{{ post.id }}')" style="cursor: pointer;"
                     title="Click to read full post">
                     {% else %}
@@ -600,7 +600,7 @@
 
                 <div class="card-footer">
                     <span>{{ post.published_date|timesince }} ago</span>
-                    {% if post.source.source_type == 'RSS' %}
+                    {% if post.source.source_type == 'RSS' or post.source.source_type == 'FACEBOOK' %}
                     <button onclick="openModal('modal-data-{{ post.id }}')" class="read-more"
                         style="background: none; border: none; font: inherit; cursor: pointer; padding: 0; display: inline-flex;">
                         Read More

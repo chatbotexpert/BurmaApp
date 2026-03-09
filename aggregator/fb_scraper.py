@@ -84,19 +84,50 @@ async def create_page_with_cookies(cookie_string: str, headless: bool) -> Tuple[
 async def click_see_more_buttons(page: Page) -> None:
     """Click all visible “See more” buttons to expand truncated posts."""
     logging.info("Clicking 'See more' buttons...")
-    for _ in range(5): # Limit to 5 iterations to avoid infinite loop
-        buttons = page.locator("div[role='button']:has-text('See more')")
-        count = await buttons.count()
-        if count == 0:
-            break
-        logging.info(f"Found {count} 'See more' buttons.")
-        for idx in range(count):
-            try:
-                await buttons.nth(idx).click(timeout=1000)
-                await page.wait_for_timeout(300)
-            except Exception as e:
-                logging.debug(f"Error clicking button: {e}")
-        await page.wait_for_timeout(500)
+    try:
+        # Use javascript to find elements with "See more" text and click them directly.
+        # This completely bypasses issues with overlapping elements, scrolling, and exact text structure matching.
+        clicked_any = await page.evaluate("""
+            () => {
+                let clicked = false;
+                // Find all elements containing "See more" or "See More"
+                // Often they are div[role="button"] or spans
+                const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+                let node;
+                const nodesToClick = [];
+                while ((node = walker.nextNode())) {
+                    if (node.nodeValue.toLowerCase().includes("see more")) {
+                        // Find the closest clickable parent
+                        let current = node.parentElement;
+                        let foundClickable = false;
+                        for(let i=0; i<3; i++) {
+                            if (current && (current.getAttribute('role') === 'button' || current.tagName === 'A' || current.tagName === 'SPAN' || current.tagName === 'DIV')) {
+                                nodesToClick.push(current);
+                                foundClickable = true;
+                                break;
+                            }
+                            if (current) current = current.parentElement;
+                        }
+                    }
+                }
+                
+                nodesToClick.forEach(btn => {
+                    if (btn.offsetParent !== null) { // if visible
+                        btn.click();
+                        clicked = true;
+                    }
+                });
+                return clicked;
+            }
+        """)
+        
+        if clicked_any:
+            await page.wait_for_timeout(2000) # wait for content to expand
+            
+    except Exception as e:
+        logging.debug(f"Error clicking button via JS: {e}")
+
+
 
 
 # --- Alt-text / permalink helpers ------------------------------------------
@@ -221,13 +252,21 @@ def extract_posts_from_html(html: str) -> List[Dict[str, Optional[str]]]:
                              valid_texts.append(txt)
                  
                  if valid_texts:
-                     post_text = " ".join(valid_texts)
+                     raw_text = " ".join(valid_texts)
+                     # Strip out literal "See more" or "...See more" text that might get captured
+                     post_text = re.sub(r'\.{0,3}\s*See more$', '', raw_text.strip(), flags=re.IGNORECASE).strip()
                  else:
                      # If no valid text containers found, check if it's just a login button group
                      if "Log in" in post.get_text() or "Create new account" in post.get_text():
                          logging.debug("Skipping post-like element that appears to be login UI.")
                          continue
-                     post_text = post.get_text(" ", strip=True) # Final noisy fallback
+                     raw_text = post.get_text(" ", strip=True) # Final noisy fallback
+                     post_text = re.sub(r'\.{0,3}\s*See more$', '', raw_text.strip(), flags=re.IGNORECASE).strip()
+
+            # Clean any remaining "...See more" in the final text
+            post_text = re.sub(r'\.{0,3}\s*See more\s*$', '', post_text, flags=re.IGNORECASE).strip()
+            # Clean "... See more" inside the text if it ended up appended
+            post_text = post_text.replace("... See more", "").replace("...See more", "").replace("See more", "")
 
             # TIME
             post_time = None
