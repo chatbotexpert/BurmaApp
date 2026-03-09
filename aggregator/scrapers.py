@@ -412,15 +412,18 @@ def run_scraping():
     print(f"DEBUG: Found {sources.count()} active sources")
     
     for source in sources:
-        if source.source_type == 'RSS':
-            total_new += fetch_rss(source)
-        elif source.source_type == 'FACEBOOK':
-             total_new += fetch_facebook(source)
-        elif source.source_type == 'TELEGRAM':
-             total_new += fetch_telegram(source)
-        elif source.source_type == 'TWITTER':
-             total_new += fetch_twitter(source)
-        else:
-            print(f"DEBUG: Unknown source type: {source.source_type}")
+        try:
+            if source.source_type == 'RSS':
+                total_new += fetch_rss(source)
+            elif source.source_type == 'FACEBOOK':
+                 total_new += fetch_facebook(source)
+            elif source.source_type == 'TELEGRAM':
+                 total_new += fetch_telegram(source)
+            elif source.source_type == 'TWITTER':
+                 total_new += fetch_twitter(source)
+            else:
+                print(f"DEBUG: Unknown source type: {source.source_type}")
+        except Exception as e:
+            logger.error(f"Failed to process source {source.name} ({source.url}): {e}")
             
     return total_new
