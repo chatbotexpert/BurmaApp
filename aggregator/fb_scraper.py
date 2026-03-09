@@ -66,17 +66,29 @@ async def create_page_with_cookies(cookie_string: str, headless: bool) -> Tuple[
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/120.0.0.0 Safari/537.36"
     )
+    import random
+    vw = random.randint(1280, 1920)
+    vh = random.randint(720, 1080)
+    
     context = await browser.new_context(
         user_agent=user_agent,
         locale="en-US",
-        viewport={"width": 1920, "height": 1080},
+        viewport={"width": vw, "height": vh},
         device_scale_factor=1,
         has_touch=False,
         is_mobile=False,
         color_scheme="dark",
         timezone_id="America/New_York",
         geolocation={"longitude": -74.006, "latitude": 40.7128},
-        permissions=["geolocation"]
+        permissions=["geolocation"],
+        extra_http_headers={
+            "Referer": "https://www.google.com/",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "Sec-Fetch-Site": "cross-site",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Dest": "document",
+        }
     )
 
     # Advanced Anti-Detection bypass
@@ -405,17 +417,46 @@ async def scrape_facebook_posts(
     try:
         page, context, browser, pw = await create_page_with_cookies(cookie_string, headless)
 
-        await page.goto(profile_url, wait_until="domcontentloaded", timeout=60000)
-        await page.wait_for_timeout(5000)
+        async def try_scrape_url(url_to_attempt):
+            await page.goto(url_to_attempt, wait_until="domcontentloaded", timeout=60000)
+            
+            # Wait for either actual content, a login form, or timeout after 15s to bypass splash screen
+            content_loaded = False
+            try:
+                await page.wait_for_selector('div[role="main"], div[role="article"], form, h1:has-text("Facebook")', timeout=15000)
+                content_loaded = True
+            except Exception:
+                pass
+                
+            await page.wait_for_timeout(5000)
+            
+            # Dismiss cookie dialog if it appears
+            try:
+                # Common "Allow all cookies" button text
+                cookie_button = page.locator('div[role="button"]:has-text("Allow all cookies"), div[role="button"]:has-text("Accept All"), div[role="button"]:has-text("Decline optional cookies")')
+                if await cookie_button.count() > 0:
+                    await cookie_button.first.click(timeout=3000)
+                    await page.wait_for_timeout(2000)
+            except Exception:
+                pass
+
+            # Check for login wall or issues
+            page_title = await page.title()
+            logging.info(f"Page Title for {url_to_attempt}: {page_title}")
+            
+            is_blocked = not content_loaded or "Log In" in page_title or "Log into" in page_title or page_title.strip() == "Facebook"
+            if is_blocked:
+                 logging.warning(f"Hit a login wall, splash screen timeout, or security block on {url_to_attempt}")
+            return is_blocked
+
+        # Try primary URL
+        blocked = await try_scrape_url(profile_url)
         
-        # Check for login wall or issues
-        title = await page.title()
-        logging.info(f"Page Title: {title}")
-        
-        if "Log In" in title or "Log into" in title or title.strip() == "Facebook":
-             logging.warning(f"Hit a login wall or security block. Title: {title}")
-             # DO NOT ABORT here. Facebook overlays login blocks on top of public pages.
-             # We will try to close them via `close_popups()` and extract whatever DOM is underneath.
+        # Fallback Strategy: If blocked and using www, try web subdomain
+        if blocked and "www.facebook.com" in profile_url:
+            fallback_url = profile_url.replace("www.facebook.com", "web.facebook.com")
+            logging.info(f"Attempting fallback to variant URL: {fallback_url}")
+            blocked = await try_scrape_url(fallback_url)
         
         # Bypass scroll locks and hide overlay dialogs forcefully
         await close_popups(page)
