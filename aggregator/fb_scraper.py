@@ -68,13 +68,36 @@ async def create_page_with_cookies(cookie_string: str, headless: bool) -> Tuple[
     )
     context = await browser.new_context(
         user_agent=user_agent,
-        viewport={"width": 1280, "height": 800},
         locale="en-US",
-        timezone_id="Europe/London",
+        viewport={"width": 1920, "height": 1080},
+        device_scale_factor=1,
+        has_touch=False,
+        is_mobile=False,
+        color_scheme="dark",
+        timezone_id="America/New_York",
+        geolocation={"longitude": -74.006, "latitude": 40.7128},
+        permissions=["geolocation"]
     )
-    await context.add_init_script(
-        "Object.defineProperty(navigator, 'webdriver', {get: () => undefined});"
-    )
+
+    # Advanced Anti-Detection bypass
+    await context.add_init_script("""
+        // Pass webdriver check
+        Object.defineProperty(navigator, 'webdriver', {
+            get: () => undefined
+        });
+        // Overwrite languages
+        Object.defineProperty(navigator, 'languages', {
+            get: () => ['en-US', 'en']
+        });
+        // Pass plugins pass
+        Object.defineProperty(navigator, 'plugins', {
+            get: () => [1, 2, 3]
+        });
+        // Hide Playwright's execution context
+        window.chrome = {
+            runtime: {}
+        };
+    """)
     await context.add_cookies(cookies)
     page = await context.new_page()
     return page, context, browser, pw
@@ -355,7 +378,7 @@ async def close_popups(page: Page):
         """)
         
         # Generic close button for "See more" or login prompts
-        close_buttons = page.locator('div[aria-label="Close"], div[aria-label="Decline optional cookies"], div[role="button"]:has-text("Not Now"), div[role="button"]:has-text("Close")')
+        close_buttons = page.locator('div[aria-label="Close"], div[aria-label="Decline optional cookies"], div[role="button"]:has-text("Not Now"), div[role="button"]:has-text("Close"), div[aria-label="Close dialog"]')
         count = await close_buttons.count()
         if count > 0:
             logging.info(f"Unwanted popups found: {count}. Closing...")
@@ -363,6 +386,10 @@ async def close_popups(page: Page):
                 if await close_buttons.nth(i).is_visible():
                     await close_buttons.nth(i).click(timeout=1000)
                     await page.wait_for_timeout(500)
+                    
+        # Last resort: Press Escape to clear any un-clickable login modals
+        await page.keyboard.press("Escape")
+        await page.wait_for_timeout(500)
     except Exception as e:
         logging.debug(f"Popup close error: {e}")
 
