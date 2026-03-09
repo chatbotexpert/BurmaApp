@@ -387,10 +387,8 @@ async def scrape_facebook_posts(
         
         if "Log In" in title or "Log into" in title or title.strip() == "Facebook":
              logging.warning(f"Hit a login wall or security block. Title: {title}")
-             await page.screenshot(path="debug_fb_fail.png")
-             with open("debug_fb_fail.html", "w", encoding="utf-8") as f:
-                 f.write(await page.content())
-             return [] # Abort immediately if we hit a login wall
+             # DO NOT ABORT here. Facebook overlays login blocks on top of public pages.
+             # We will try to close them via `close_popups()` and extract whatever DOM is underneath.
         
         # Bypass scroll locks and hide overlay dialogs forcefully
         await close_popups(page)
