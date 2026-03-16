@@ -113,9 +113,22 @@ def fetch_rss(source):
         if hasattr(feed, 'bozo_exception'):
              logger.warning(f"Feed Bozo Exception for {source.name}: {feed.bozo_exception}")
 
+        # Auto-detect source platform from the feed link if it exists
+        feed_link = feed.feed.get('link', '').lower()
+        if 'facebook.com' in feed_link and source.source_type != 'FACEBOOK':
+            source.source_type = 'FACEBOOK'
+            source.save(update_fields=['source_type'])
+        elif ('twitter.com' in feed_link or 'x.com' in feed_link) and source.source_type != 'TWITTER':
+            source.source_type = 'TWITTER'
+            source.save(update_fields=['source_type'])
+        elif 't.me' in feed_link and source.source_type != 'TELEGRAM':
+            source.source_type = 'TELEGRAM'
+            source.save(update_fields=['source_type'])
+
         new_posts_count = 0
         
-        for entry in feed.entries[:10]: # Check top 10 entries
+        # Fetch all entries in the feed
+        for entry in feed.entries: 
             # Check if post already exists
             if Post.objects.filter(url=entry.link).exists():
                 continue
@@ -130,44 +143,65 @@ def fetch_rss(source):
             content = ""
             title = entry.title
             
-            # Fetch Full Article Text using newspaper3k
-            try:
-                # Add headers to bypass 403 Forbidden on some sites
-                headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
-                response = requests.get(entry.link, headers=headers, timeout=10)
-                html = response.text
+            # For Social Sources (Facebook, Twitter, Telegram) via RSS, prioritize the feed content
+            # since trying to scrape the link directly usually hits a login wall or bot detection.
+            is_social = source.source_type in ['FACEBOOK', 'TWITTER', 'TELEGRAM']
+            
+            if is_social:
+                if 'content' in entry:
+                    soup = BeautifulSoup(entry.content[0].value, 'html.parser')
+                    content = soup.get_text(separator='\n', strip=True)
+                elif 'summary' in entry:
+                    soup = BeautifulSoup(entry.summary, 'html.parser')
+                    content = soup.get_text(separator='\n', strip=True)
                 
-                article = Article(entry.link)
-                article.set_html(html)
-                article.parse()
-                
-                # Newspaper3k often fails on Burmese text because it uses space-based word counting 
-                # to finding "content" text blocks. If text is short or is a menu item, use fallback.
-                if article.text and len(article.text) > 150 and "what are you looking for" not in article.text.lower():
-                    content = article.text
-                else:
-                    # Fallback: Parse with BeautifulSoup and extract <p> tags
-                    soup = BeautifulSoup(html, 'html.parser')
+                logger.debug(f"Social RSS feed content used for {title}")
+
+            # If not social, or if feed content was empty, try to fetch full article
+            if not content:
+                # Fetch Full Article Text using newspaper3k
+                try:
+                    # Add headers to bypass 403 Forbidden on some sites
+                    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+                    response = requests.get(entry.link, headers=headers, timeout=10)
+                    html = response.text
                     
-                    # Try to find the main article container
-                    article_container = soup.find('article') or soup.find(class_='entry-content') or soup.find(class_='post-content') or soup.find(class_='content')
+                    # Detect block messages
+                    if "working on getting this fixed" in html.lower() or "log in or sign up to view" in html.lower():
+                        logger.warning(f"Detected block message from {entry.link}, skipping external extraction.")
+                        html = "" # Force fallback to feed content
                     
-                    if article_container:
-                        paragraphs = article_container.find_all('p')
-                        if paragraphs:
-                            content = '\n\n'.join(p.get_text(separator=' ', strip=True) for p in paragraphs if p.get_text(strip=True))
+                    if html:
+                        article = Article(entry.link)
+                        article.set_html(html)
+                        article.parse()
+                        
+                        # Newspaper3k often fails on Burmese text because it uses space-based word counting 
+                        # to finding "content" text blocks. If text is short or is a menu item, use fallback.
+                        if article.text and len(article.text) > 150 and "what are you looking for" not in article.text.lower():
+                            content = article.text
                         else:
-                            content = article_container.get_text(separator='\n', strip=True)
-                    else:
-                        # Last ditch: grab all paragraphs in body
-                        paragraphs = soup.find('body').find_all('p') if soup.find('body') else []
-                        if paragraphs:
-                            content = '\n\n'.join(p.get_text(separator=' ', strip=True) for p in paragraphs if p.get_text(strip=True))
+                            # Fallback: Parse with BeautifulSoup and extract <p> tags
+                            soup = BeautifulSoup(html, 'html.parser')
                             
-            except Exception as e:
-                logger.warning(f"Could not extract full article from {entry.link}: {e}")
-                
-            # Fallback to feed summary if extraction failed
+                            # Try to find the main article container
+                            article_container = soup.find('article') or soup.find(class_='entry-content') or soup.find(class_='post-content') or soup.find(class_='content')
+                            
+                            if article_container:
+                                paragraphs = article_container.find_all('p')
+                                if paragraphs:
+                                    content = '\n\n'.join(p.get_text(separator=' ', strip=True) for p in paragraphs if p.get_text(strip=True))
+                                else:
+                                    content = article_container.get_text(separator='\n', strip=True)
+                            else:
+                                # Last ditch: grab all paragraphs in body
+                                paragraphs = soup.find('body').find_all('p') if soup.find('body') else []
+                                if paragraphs:
+                                    content = '\n\n'.join(p.get_text(separator=' ', strip=True) for p in paragraphs if p.get_text(strip=True))
+                except Exception as e:
+                    logger.warning(f"Could not extract full article from {entry.link}: {e}")
+                    
+            # Fallback to feed summary if extraction failed OR if we just didn't try external fetch
             if not content:
                 if 'content' in entry:
                     # Some feeds provide full content as HTML
@@ -182,7 +216,6 @@ def fetch_rss(source):
             
             # Fallback: Fetch OG image if no image found in feed
             if not image_url:
-                 print(f"No RSS image for {entry.title}, trying OG fetch...")
                  image_url = _fetch_og_image(entry.link)
 
             if not _is_valid_image(image_url):
@@ -192,7 +225,7 @@ def fetch_rss(source):
             if not content and title:
                 content = title
 
-            # Translate
+            # Ensure both Title and Content are translated cleanly
             trans_title = translate_text(title)
             trans_content = translate_text(content)
             
@@ -202,7 +235,7 @@ def fetch_rss(source):
                     source=source,
                     title=trans_title,
                     original_content=content,
-                    translated_content=trans_content, # Changed: Only save content, not title
+                    translated_content=trans_content,
                     url=entry.link,
                     image_url=image_url,
                     published_date=published_date
@@ -216,196 +249,6 @@ def fetch_rss(source):
         logger.error(f"Error fetching RSS {source.url}: {e}")
         return 0
 
-try:
-    from .fb_scraper import fetch_posts
-except ImportError as e:
-    fetch_posts = None
-    logger.error(f"Playwright scraper import error: {e}")
-
-def fetch_facebook(source):
-    """
-    Fetches posts from a public Facebook page using Playwright.
-    """
-    logger.info(f"Fetching Facebook: {source.name}")
-    
-    if not fetch_posts:
-        logger.error("Playwright scraper module missing.")
-        return 0
-
-    new_posts_count = 0
-    
-    try:
-        # Fetch posts using the new scraper
-        # It returns a list of dicts: title, text, image_url, permalink, published_at
-        posts = fetch_posts(source.url, limit=15)
-        
-        for post in posts:
-            post_url = post.get('permalink')
-            if not post_url:
-                continue
-
-            if Post.objects.filter(url=post_url).exists():
-                continue
-                
-            content = post.get('text', '')
-            title = post.get('title', 'Facebook Post')
-            image_url = post.get('image_url')
-            
-            if not _is_valid_image(image_url):
-                image_url = None
-            
-            if not content and title == 'Post' and not image_url:
-                continue
-
-            # Fallback: If content is empty but we have a title, use title as content
-            if not content and title != 'Facebook Post':
-                content = title
-                
-            published_date = post.get('published_at')
-            if not published_date:
-                published_date = timezone.now()
-            elif timezone.is_naive(published_date):
-                 published_date = timezone.make_aware(published_date)
-
-            # Translate
-            trans_content = translate_text(content)
-            trans_title = translate_text(title)
-            
-            try:
-                Post.objects.create(
-                    source=source,
-                    title=trans_title,
-                    original_content=content,
-                    translated_content=trans_content, # Changed: Only save content, not title
-                    url=post_url,
-                    image_url=image_url,
-                    published_date=published_date
-                )
-                new_posts_count += 1
-            except Exception as e:
-                 logger.error(f"Save Error: {e}")
-                
-    except Exception as e:
-        logger.error(f"Facebook Scraping Error for {source.url}: {e}")
-        
-    return new_posts_count
-
-try:
-    from .telegram_scraper import fetch_telegram_posts
-except ImportError as e:
-    fetch_telegram_posts = None
-    logger.error(f"Telegram scraper import error: {e}")
-
-try:
-    from .twitter_scraper import fetch_twitter_posts
-except ImportError as e:
-    fetch_twitter_posts = None
-    logger.error(f"Twitter scraper import error: {e}")
-
-def fetch_telegram(source):
-    """
-    Fetches posts from a public Telegram channel.
-    """
-    logger.info(f"Fetching Telegram: {source.name}")
-    
-    if not fetch_telegram_posts:
-        logger.error("Telegram scraper module missing.")
-        return 0
-
-    new_posts_count = 0
-    
-    try:
-        # Fetch posts
-        posts = fetch_telegram_posts(source.url, limit=20)
-        
-        for post in posts:
-            post_url = post.get('permalink') # telegram scraper returns permalink
-            if not post_url or Post.objects.filter(url=post_url).exists():
-                continue
-                
-            content = post.get('text', '')
-            title = post.get('title', 'Telegram Post')
-            image_url = post.get('image_url')
-            published_date = post.get('published_at', timezone.now())
-
-            if not content:
-                content = title
-
-            # Translate
-            trans_content = translate_text(content)
-            trans_title = translate_text(title)
-            
-            try:
-                Post.objects.create(
-                    source=source,
-                    title=trans_title,
-                    original_content=content,
-                    translated_content=trans_content,
-                    url=post_url,
-                    image_url=image_url,
-                    published_date=published_date
-                )
-                new_posts_count += 1
-            except Exception as e:
-                logger.error(f"Save Error: {e}")
-                
-    except Exception as e:
-        logger.error(f"Telegram Scraping Error for {source.url}: {e}")
-        
-    return new_posts_count
-
-def fetch_twitter(source):
-    """
-    Fetches posts from a public Twitter profile.
-    """
-    logger.info(f"Fetching Twitter: {source.name}")
-    
-    if not fetch_twitter_posts:
-        logger.error("Twitter scraper module missing.")
-        return 0
-
-    new_posts_count = 0
-    
-    try:
-        # Fetch posts
-        posts = fetch_twitter_posts(source.url, limit=15)
-        
-        for post in posts:
-            post_url = post.get('permalink')
-            if not post_url or Post.objects.filter(url=post_url).exists():
-                continue
-                
-            content = post.get('text', '')
-            title = post.get('title', 'Twitter Post')
-            image_url = post.get('image_url')
-            published_date = post.get('published_at', timezone.now())
-
-            if not content:
-                content = title
-
-            # Translate
-            trans_content = translate_text(content)
-            trans_title = translate_text(title)
-            
-            try:
-                Post.objects.create(
-                    source=source,
-                    title=trans_title,
-                    original_content=content,
-                    translated_content=trans_content,
-                    url=post_url,
-                    image_url=image_url,
-                    published_date=published_date
-                )
-                new_posts_count += 1
-            except Exception as e:
-                logger.error(f"Save Error: {e}")
-                
-    except Exception as e:
-        logger.error(f"Twitter Scraping Error for {source.url}: {e}")
-        
-    return new_posts_count
-
 def run_scraping():
     sources = Source.objects.filter(is_active=True)
     total_new = 0
@@ -413,16 +256,8 @@ def run_scraping():
     
     for source in sources:
         try:
-            if source.source_type == 'RSS':
-                total_new += fetch_rss(source)
-            elif source.source_type == 'FACEBOOK':
-                 total_new += fetch_facebook(source)
-            elif source.source_type == 'TELEGRAM':
-                 total_new += fetch_telegram(source)
-            elif source.source_type == 'TWITTER':
-                 total_new += fetch_twitter(source)
-            else:
-                print(f"DEBUG: Unknown source type: {source.source_type}")
+            # We strictly use RSS fetching now
+            total_new += fetch_rss(source)
         except Exception as e:
             logger.error(f"Failed to process source {source.name} ({source.url}): {e}")
             

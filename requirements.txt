@@ -5,9 +5,7 @@ requests
 beautifulsoup4
 lxml
 python-dateutil
-facebook-scraper
-Playwright
-Telethon
+
 whitenoise
 gunicorn
 nest-asyncio

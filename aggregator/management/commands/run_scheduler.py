@@ -19,8 +19,8 @@ class Command(BaseCommand):
                 # Get or create settings
                 settings_obj = ScraperSettings.objects.first()
                 if not settings_obj:
-                    settings_obj = ScraperSettings.objects.create(scraping_interval=5) # Default to 5 minutes
-                    self.stdout.write(self.style.WARNING(f'No settings found, created default with 5 mins interval'))
+                    settings_obj = ScraperSettings.objects.create(scraping_interval=15) # Default to 15 minutes
+                    self.stdout.write(self.style.WARNING(f'No settings found, created default with 15 mins interval'))
                 
                 interval_minutes = settings_obj.scraping_interval
                 interval_seconds = interval_minutes * 60

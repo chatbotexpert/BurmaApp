@@ -3,13 +3,8 @@ from .models import Source, Post, ScraperSettings
 
 @admin.register(ScraperSettings)
 class ScraperSettingsAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'scraping_interval', 'has_facebook_cookie')
-    
-    def has_facebook_cookie(self, obj):
-        return bool(obj.facebook_cookie_string)
-    has_facebook_cookie.short_description = 'Has Custom FB Cookie'
-    has_facebook_cookie.boolean = True
-    
+    list_display = ('__str__', 'scraping_interval')
+
     def has_add_permission(self, request):
         # Only allow adding if no instance exists
         if self.model.objects.exists():
@@ -31,20 +26,13 @@ class SourceAdmin(admin.ModelAdmin):
 
     @admin.action(description='Trigger Scrape for Selected Sources')
     def trigger_scrape(self, request, queryset):
-        from aggregator.scrapers import fetch_rss, fetch_facebook, fetch_telegram, fetch_twitter
+        from aggregator.scrapers import fetch_rss
         count = 0
         for source in queryset:
             count += 1
             def scrape_single_source(src):
                 try:
-                    if src.source_type == 'RSS':
-                        fetch_rss(src)
-                    elif src.source_type == 'FACEBOOK':
-                        fetch_facebook(src)
-                    elif src.source_type == 'TELEGRAM':
-                        fetch_telegram(src)
-                    elif src.source_type == 'TWITTER':
-                        fetch_twitter(src)
+                    fetch_rss(src)
                 except Exception as e:
                     import logging
                     logging.getLogger(__name__).error(f"Background scrape failed for {src.name}: {e}")
@@ -59,18 +47,11 @@ class SourceAdmin(admin.ModelAdmin):
         
         # If the source is active, trigger an immediate scrape in the background
         if obj.is_active:
-            from aggregator.scrapers import fetch_rss, fetch_facebook, fetch_telegram, fetch_twitter
+            from aggregator.scrapers import fetch_rss
             
             def scrape_single_source(source):
                 try:
-                    if source.source_type == 'RSS':
-                        fetch_rss(source)
-                    elif source.source_type == 'FACEBOOK':
-                        fetch_facebook(source)
-                    elif source.source_type == 'TELEGRAM':
-                        fetch_telegram(source)
-                    elif source.source_type == 'TWITTER':
-                        fetch_twitter(source)
+                    fetch_rss(source)
                 except Exception as e:
                     import logging
                     logging.getLogger(__name__).error(f"Background scrape failed for {source.name}: {e}")
