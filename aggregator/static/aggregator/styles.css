@@ -1,75 +1,60 @@
 /* Modern Color Palette */
 :root {
-    --primary: #4f46e5;
-    /* Indigo 600 */
-    --primary-hover: #4338ca;
-    /* Indigo 700 */
-    --background: #fdfdfd;
-    /* Very slight off-white */
+    --primary: #c9973a; /* Gold */
+    --primary-hover: #8a6525; /* Dim Gold */
+    --background: #fdfbf7; /* Warm Paper White */
     --surface: #ffffff;
-    --text-main: #1e293b;
-    /* Slate 800 */
-    --text-secondary: #64748b;
-    /* Slate 500 */
-    --border: #f1f5f9;
-    /* Slate 100 - very subtle */
-    --border-hover: #e2e8f0;
-    /* Slate 200 */
+    --text-main: #2b2824; /* Warm Dark Text */
+    --text-secondary: #756a5c; /* Muted Brown-Grey */
+    --border: #e8e4db;
+    --border-hover: #c9973a;
 
-    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.02), 0 1px 2px -1px rgb(0 0 0 / 0.02);
-    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.03), 0 4px 6px -4px rgb(0 0 0 / 0.03);
-    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.01);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.02);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.03);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.03);
 
     --radius: 1rem;
-    /* More rounded */
-    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-serif: 'Noto Serif Myanmar', serif;
+    --font-sans: 'IBM Plex Mono', 'Inter', system-ui, sans-serif;
+    --font-serif: 'Playfair Display', 'Source Serif 4', 'Noto Serif Myanmar', serif;
 }
 
-/* Dark Mode Variables */
+/* Dark Mode Variables matching burma-news.org */
 body.dark-mode {
-    --primary: #6366f1;
-    /* Indigo 500 - brighter for dark mode */
-    --primary-hover: #818cf8;
-    /* Indigo 400 */
-    --background: #0f172a;
-    /* Slate 900 */
-    --surface: #1e293b;
-    /* Slate 800 */
-    --text-main: #f1f5f9;
-    /* Slate 100 */
-    --text-secondary: #94a3b8;
-    /* Slate 400 */
-    --border: #334155;
-    /* Slate 700 */
-    --border-hover: #475569;
-    /* Slate 600 */
+    --primary: #c9973a; /* Gold */
+    --primary-hover: #e8b84b; /* Amber */
+    --background: #0e0d0b; /* Deep Black/Brown */
+    --surface: #17150f; /* Slightly lighter surface */
+    --text-main: #e8e0d0; /* Off-white text */
+    --text-secondary: #8c8070; /* Muted */
+    --border: #2e2a22; /* Dark border */
+    --border-hover: #c94a3a; /* Red on hover */
 
-    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
-    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.3);
-    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.5);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.6);
 }
 
 /* Dark Mode Specific Overrides */
 body.dark-mode .navbar {
-    background: rgba(15, 23, 42, 0.85);
-    /* Darker blur */
+    background: rgba(23, 21, 15, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
 }
 
 body.dark-mode .content-block.original {
-    background-color: #1e293b;
-    /* Match surface */
+    background-color: #1a1711;
+    /* Warm dark brown matching surface */
     border-bottom: 1px solid var(--border);
 }
 
 body.dark-mode .content-block.translated {
-    background-color: #0f172a;
-    /* Darker background for distinction */
+    background-color: #12100b;
+    /* Very dark almost-black for distinction */
 }
 
 body.dark-mode .card-image {
-    background: #334155;
+    background: #1a1711;
 }
 
 body.dark-mode .page-link:hover,
@@ -135,6 +120,7 @@ body {
 }
 
 .navbar-brand {
+    font-family: var(--font-serif);
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--text-main);
@@ -183,6 +169,7 @@ body {
 }
 
 .feed-title {
+    font-family: var(--font-serif);
     font-size: 3rem;
     font-weight: 800;
     color: var(--text-main);
@@ -363,6 +350,7 @@ body.dark-mode .source-type-tag.twitter {
 }
 
 .card-title {
+    font-family: var(--font-serif);
     font-size: 1.35rem;
     font-weight: 700;
     color: var(--text-main);
@@ -429,6 +417,7 @@ body.dark-mode .source-type-tag.twitter {
 .pagination {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 0.75rem;
     margin-bottom: 4rem;
 }

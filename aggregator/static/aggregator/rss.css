@@ -1,47 +1,30 @@
 /* Modern RSS Feed Styling */
 :root {
-    /* Color Palette - Modern Indigo/Slate Theme */
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
-    --primary-light: #e0e7ff;
+    /* Color Palette - Elegant Gold/Dark Theme Standardized */
+    --primary: #c9973a;
+    --primary-hover: #8a6525;
+    --primary-light: #2e2a22;
 
-    --background: #f8fafc;
-    --surface: #ffffff;
-    --surface-hover: #f1f5f9;
+    --background: #0e0d0b;
+    --surface: #17150f;
+    --surface-hover: #2e2a22;
 
-    --text-main: #0f172a;
-    --text-secondary: #64748b;
-    --text-tertiary: #94a3b8;
+    --text-main: #e8e0d0;
+    --text-secondary: #8c8070;
+    --text-tertiary: #5e564b;
 
-    --border: #e2e8f0;
-    --border-hover: #cbd5e1;
+    --border: #2e2a22;
+    --border-hover: #8a6525;
 
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
 
     --radius: 0.75rem;
     --radius-sm: 0.5rem;
 
-    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0f172a;
-        --surface: #1e293b;
-        --surface-hover: #334155;
-
-        --text-main: #f8fafc;
-        --text-secondary: #94a3b8;
-        --text-tertiary: #64748b;
-
-        --border: #334155;
-        --border-hover: #475569;
-
-        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
-    }
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'IBM Plex Mono', 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
 * {
@@ -81,6 +64,7 @@ header {
 }
 
 h1 {
+    font-family: var(--font-serif);
     font-size: 2.5rem;
     background: linear-gradient(135deg, var(--text-main) 0%, var(--primary) 100%);
     -webkit-background-clip: text;

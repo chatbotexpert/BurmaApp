@@ -2,126 +2,94 @@
 
 {% block content %}
 <style>
-    /* Ultra-Premium Header Styles */
+    /* Ultra-Premium Header Styles (Updated) */
     .feed-header-wrapper {
         position: relative;
-        text-align: center;
+        text-align: left;
         margin-bottom: 4rem;
-        padding-top: 4rem;
-        /* enhanced breathing room */
+        padding-top: 6rem;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
+        max-width: 900px;
+        margin-left: 0;
     }
 
-    /* Animated Ambient Background Glow (Aurora Effect) */
-    .feed-header-bg-glow {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80vw;
-        height: 600px;
-        background:
-            radial-gradient(circle at 30% 20%, rgba(79, 70, 229, 0.12) 0%, transparent 50%),
-            radial-gradient(circle at 70% 40%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
-        filter: blur(80px);
-        z-index: 0;
-        pointer-events: none;
-        animation: pulseGlow 8s ease-in-out infinite alternate;
-    }
-
-    body.dark-mode .feed-header-bg-glow {
-        background:
-            radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
-            radial-gradient(circle at 70% 40%, rgba(192, 132, 252, 0.15) 0%, transparent 50%);
-    }
-
-    @keyframes pulseGlow {
-        0% {
-            transform: translateX(-50%) scale(1);
-            opacity: 0.7;
-        }
-
-        100% {
-            transform: translateX(-50%) scale(1.15);
-            opacity: 1;
-        }
-    }
-
-    /* Next-Gen Pill Badge */
-    .hero-badge {
-        position: relative;
-        z-index: 1;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.4rem 1rem;
-        border-radius: 999px;
-        background: rgba(79, 70, 229, 0.08);
-        border: 1px solid rgba(79, 70, 229, 0.2);
+    .project-subheading {
         color: var(--primary);
-        font-family: 'Inter', var(--font-sans);
-        font-size: 0.85rem;
+        font-family: var(--font-sans);
+        font-size: 0.75rem;
         font-weight: 600;
-        margin-bottom: 1.5rem;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
     }
 
-    body.dark-mode .hero-badge {
-        background: rgba(99, 102, 241, 0.1);
-        border: 1px solid rgba(99, 102, 241, 0.25);
-        color: #a5b4fc;
-        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
-    }
-
-    /* Animated Gradient Text */
+    /* Main Typography */
     .feed-title {
         position: relative;
         z-index: 1;
-        font-family: 'Plus Jakarta Sans', var(--font-sans);
-        font-size: clamp(3rem, 6vw, 5rem);
+        font-family: var(--font-serif);
+        font-size: clamp(2.5rem, 10vw, 6rem);
         font-weight: 800;
-        letter-spacing: -0.05em;
+        letter-spacing: -0.02em;
         line-height: 1.1;
-        margin-bottom: 1.25rem;
-        padding-bottom: 0.15rem;
-        padding-top: 0.1rem;
-        background: linear-gradient(to right, var(--text-main) 20%, var(--primary) 50%, var(--text-main) 80%);
-        background-size: 200% auto;
-        color: transparent;
-        -webkit-background-clip: text;
-        background-clip: text;
-        animation: textShine 8s linear infinite;
-        display: inline-block;
+        margin-bottom: 2rem;
+        color: var(--text-main);
+        word-break: break-word;
     }
 
-    body.dark-mode .feed-title {
-        background: linear-gradient(to right, #ffffff 20%, #c084fc 40%, #818cf8 60%, #ffffff 80%);
-        background-size: 200% auto;
-        color: transparent;
-        -webkit-background-clip: text;
-        background-clip: text;
-        text-shadow: 0 10px 40px rgba(139, 92, 246, 0.2);
+    .feed-title .italic-gold {
+        color: var(--primary);
+        font-style: italic;
     }
 
-    @keyframes textShine {
-        to {
-            background-position: 200% center;
-        }
+    .title-divider {
+        width: 4rem;
+        height: 3px;
+        background-color: var(--primary);
+        margin-bottom: 2rem;
     }
 
     .feed-subtitle {
         position: relative;
         z-index: 1;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         color: var(--text-secondary);
-        max-width: 600px;
-        margin: 0 auto 3rem auto;
+        max-width: 650px;
+        margin: 0 0 3rem 0;
         line-height: 1.6;
         font-weight: 400;
-        letter-spacing: -0.01em;
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: 3rem;
+        margin-bottom: 4rem;
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-value {
+        color: var(--primary);
+        font-family: var(--font-serif);
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-family: var(--font-sans);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 0.7rem;
+        font-weight: 600;
     }
 
     /* Next-Gen Glassmorphic Buttons */
@@ -129,10 +97,12 @@
         position: relative;
         z-index: 100;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
+        flex-wrap: wrap;
         gap: 1.25rem;
         margin-bottom: 2rem;
+        width: 100%;
     }
 
     .premium-btn {
@@ -145,16 +115,14 @@
         font-size: 1rem;
         font-weight: 600;
         letter-spacing: -0.01em;
-        /* Apple-esque structural borders and shadows */
         background: var(--surface);
         color: var(--text-main);
         border: 1px solid rgba(0, 0, 0, 0.08);
+        white-space: nowrap;
         box-shadow:
             0 2px 8px -2px rgba(0, 0, 0, 0.05),
             0 8px 24px -4px rgba(0, 0, 0, 0.02),
             inset 0 1px 1px rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         cursor: pointer;
         text-decoration: none;
@@ -163,46 +131,28 @@
     }
 
     body.dark-mode .premium-btn {
-        background: rgba(30, 41, 59, 0.7);
+        background: rgba(26, 23, 17, 0.7);
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow:
             0 4px 12px -2px rgba(0, 0, 0, 0.3),
             inset 0 1px 1px rgba(255, 255, 255, 0.05);
     }
 
-    .premium-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-
     .premium-btn:hover {
         transform: translateY(-2px);
-        border-color: rgba(79, 70, 229, 0.3);
+        border-color: var(--primary);
         box-shadow:
-            0 12px 28px -6px rgba(79, 70, 229, 0.15),
-            0 4px 12px -2px rgba(0, 0, 0, 0.05),
-            inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            0 12px 28px -6px rgba(201, 151, 58, 0.15),
+            0 4px 12px -2px rgba(0, 0, 0, 0.05);
         color: var(--primary);
     }
 
     body.dark-mode .premium-btn:hover {
-        border-color: rgba(99, 102, 241, 0.5);
+        border-color: var(--primary);
         box-shadow:
-            0 12px 30px -6px rgba(99, 102, 241, 0.25),
-            0 4px 12px -2px rgba(0, 0, 0, 0.4),
-            inset 0 1px 1px rgba(255, 255, 255, 0.1);
-        background: rgba(30, 41, 59, 0.9);
-    }
-
-    .premium-btn:hover::before {
-        opacity: 1;
+            0 12px 30px -6px rgba(201, 151, 58, 0.25),
+            0 4px 12px -2px rgba(0, 0, 0, 0.4);
+        background: rgba(26, 23, 17, 0.9);
     }
 
     .premium-btn:active {
@@ -229,19 +179,22 @@
     /* Special Styling for the RSS Action Button */
     .premium-btn.rss-btn {
         background: var(--background);
-        border: 1px solid rgba(79, 70, 229, 0.2);
+        border: 1px solid var(--border);
     }
 
     body.dark-mode .premium-btn.rss-btn {
-        background: rgba(15, 23, 42, 0.8);
+        background: var(--surface);
     }
 </style>
 
 <div class="feed-header-wrapper">
-    <div class="feed-header-bg-glow"></div>
-    <div class="hero-badge">✨ Live Real-Time Feed</div>
-    <h1 class="feed-title">Social Media Aggregator</h1>
-    <p class="feed-subtitle">Get the latest news and updates from multiple platforms in one seamless feed.</p>
+    <div class="project-subheading">BURMA NEWS PROJECT — COMMUNITY NEWS INITIATIVE</div>
+    <h1 class="feed-title">
+        Social Media<br>
+        <span class="italic-gold">Aggregator</span>
+    </h1>
+    <div class="title-divider"></div>
+
 
     <!-- Filter Dropdown -->
     <div class="premium-filter-container">
@@ -338,12 +291,10 @@
         .source-tags-container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 0.6rem;
             margin-bottom: 3rem;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            width: 100%;
         }
 
         .source-tag {
@@ -728,7 +679,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(15, 23, 42, 0.4);
+        background: rgba(18, 16, 11, 0.4);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         z-index: 9999;
@@ -766,7 +717,7 @@
     }
 
     body.dark-mode .glass-modal-container {
-        background: rgba(15, 23, 42, 0.75);
+        background: rgba(26, 23, 17, 0.85);
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow:
             0 24px 48px -12px rgba(0, 0, 0, 0.5),
@@ -887,7 +838,7 @@
     }
 
     body.dark-mode .modal-content-block {
-        background: rgba(30, 41, 59, 0.5);
+        background: rgba(26, 23, 17, 0.5);
         border: 1px solid rgba(255, 255, 255, 0.05);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
