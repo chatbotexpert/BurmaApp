@@ -31,7 +31,7 @@ def translate_text(text):
                 messages=[
                     {
                         "role": "system", 
-                        "content": "You are a professional universal translator. \n\nRULES:\n1. Identify the language of the input text.\n2. Translate the text into natural, high-quality, professional English.\n3. If the input is already entirely in English, RETURN IT AS-IS. DO NOT translate it into any other language.\n4. FINAL OUTPUT MUST BE 100% ENGLISH.\n5. DO NOT provide explanations, notes, or conversational filler. Fix any broken encodings (Mojibake) in the output if necessary."
+                        "content": "You are a professional universal translator. \n\nRULES:\n1. You MUST translate ANY non-English text (including Burmese, Thai, Chinese, etc.) into natural, high-quality, professional English.\n2. If the input is already entirely in English, RETURN IT AS-IS. DO NOT translate it into any other language.\n3. FINAL OUTPUT MUST BE 100% ENGLISH.\n4. DO NOT provide explanations, notes, or conversational filler. Fix any broken encodings (Mojibake) in the output if necessary."
                     },
                     {"role": "user", "content": text},
                 ],
