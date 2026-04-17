@@ -105,9 +105,10 @@ def fetch_rss(source):
         }
         response = requests.get(source.url, headers=headers, timeout=10)
         response.raise_for_status()
+        response.encoding = response.apparent_encoding
         
-        # Parse the raw XML string using feedparser
-        feed = feedparser.parse(response.content)
+        # Parse the decoded string using feedparser
+        feed = feedparser.parse(response.text)
         
         # Check for bozo (malformed feed) but try to process anyway if entries exist
         if hasattr(feed, 'bozo_exception'):
@@ -164,6 +165,7 @@ def fetch_rss(source):
                     # Add headers to bypass 403 Forbidden on some sites
                     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
                     response = requests.get(entry.link, headers=headers, timeout=10)
+                    response.encoding = response.apparent_encoding
                     html = response.text
                     
                     # Detect block messages
