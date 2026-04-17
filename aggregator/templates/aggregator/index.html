@@ -356,26 +356,49 @@
         .source-tag.active .source-tag-rss:hover {
             color: white;
         }
+        .source-accordion summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        .source-accordion[open] summary .chevron {
+            transform: rotate(180deg);
+        }
     </style>
-    <div class="source-tags-container">
-        {% for source in sources %}
-        <div class="source-tag {% if request.GET.source|add:'0' == source.id %}active{% endif %}">
-            <a href="?source={{ source.id }}" class="source-tag-name">
-                {{ source.name }}
-            </a>
-            <button class="source-tag-rss"
-                onclick="copySourceRss('{{ request.scheme }}://{{ request.get_host }}/feed/rss?source={{ source.id }}&format=xml', this)"
-                title="Copy RSS" aria-label="Copy RSS">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 11a9 9 0 0 1 9 9" />
-                    <path d="M4 4a16 16 0 0 1 16 16" />
-                    <circle cx="5" cy="19" r="1" />
-                </svg>
-            </button>
+    
+    <details class="source-accordion" {% if request.GET.source %}open{% endif %}>
+        <summary class="premium-btn" style="list-style: none; display: inline-flex; cursor: pointer; margin-bottom: 2rem; user-select: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+            </svg>
+            <span>Browse all publishers</span>
+            <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px;">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </summary>
+        <div class="source-tags-container">
+            {% for source in sources %}
+            <div class="source-tag {% if request.GET.source|add:'0' == source.id %}active{% endif %}">
+                <a href="?source={{ source.id }}" class="source-tag-name">
+                    {{ source.name }}
+                </a>
+                <button class="source-tag-rss"
+                    onclick="copySourceRss('{{ request.scheme }}://{{ request.get_host }}/feed/rss?source={{ source.id }}&format=xml', this)"
+                    title="Copy RSS" aria-label="Copy RSS">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 11a9 9 0 0 1 9 9" />
+                        <path d="M4 4a16 16 0 0 1 16 16" />
+                        <circle cx="5" cy="19" r="1" />
+                    </svg>
+                </button>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
+    </details>
 </div>
 
 <!-- Script to handle individual source RSS copying -->
