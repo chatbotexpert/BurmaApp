@@ -526,6 +526,72 @@
                     .content-text p:last-child {
                         margin-bottom: 0;
                     }
+
+                    /* ── Collapsible Original Text Toggle ── */
+                    .original-toggle {
+                        border: none;
+                        background: none;
+                        padding: 0;
+                        margin: 0;
+                        width: 100%;
+                    }
+
+                    .original-toggle summary {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        cursor: pointer;
+                        list-style: none;
+                        font-size: 0.7rem;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                        color: var(--text-secondary);
+                        letter-spacing: 0.05em;
+                        padding: 0;
+                        user-select: none;
+                        transition: color 0.2s ease;
+                    }
+
+                    .original-toggle summary::-webkit-details-marker { display: none; }
+
+                    .original-toggle summary:hover {
+                        color: var(--primary);
+                    }
+
+                    .original-toggle summary .toggle-chevron {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        background: rgba(0,0,0,0.04);
+                        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+                        flex-shrink: 0;
+                        margin-left: auto;
+                    }
+
+                    body.dark-mode .original-toggle summary .toggle-chevron {
+                        background: rgba(255,255,255,0.08);
+                    }
+
+                    .original-toggle[open] summary .toggle-chevron {
+                        transform: rotate(180deg);
+                    }
+
+                    .original-toggle summary:hover .toggle-chevron {
+                        background: rgba(201, 151, 58, 0.15);
+                    }
+
+                    .original-toggle .original-body {
+                        margin-top: 0.75rem;
+                        animation: slideDown 0.25s ease-out;
+                    }
+
+                    @keyframes slideDown {
+                        from { opacity: 0; max-height: 0; }
+                        to   { opacity: 1; max-height: 600px; }
+                    }
                 </style>
                 {% if post.source.source_type == 'RSS' or post.source.source_type == 'FACEBOOK' %}
                 <div class="content-stack" onclick="openModal('modal-data-{{ post.id }}')" style="cursor: pointer;"
@@ -534,20 +600,27 @@
                     <div class="content-stack">
                         {% endif %}
                         <div class="content-block original">
-                            <h4>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="2" x2="22" y1="12" y2="12" />
-                                    <path
-                                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                                </svg>
-                                Original
-                            </h4>
-                            <div class="content-text" style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
-                                {{ post.original_content|truncatewords:40|linebreaks }}
-                            </div>
+                            <details class="original-toggle">
+                                <summary>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="2" x2="22" y1="12" y2="12" />
+                                        <path
+                                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                    </svg>
+                                    Original
+                                    <span class="toggle-chevron">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                    </span>
+                                </summary>
+                                <div class="original-body">
+                                    <div class="content-text" style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
+                                        {{ post.original_content|truncatewords:40|linebreaks }}
+                                    </div>
+                                </div>
+                            </details>
                         </div>
                         {% if post.translated_content %}
                         <div class="content-block translated">
@@ -598,20 +671,27 @@
                         <h2 class="modal-post-title"><a href="{{ post.url }}" target="_blank">{{ post.title }}</a></h2>
                         <div class="modal-content-stack">
                             <div class="modal-content-block original">
-                                <h4>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="2" x2="22" y1="12" y2="12" />
-                                        <path
-                                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                                    </svg>
-                                    Original
-                                </h4>
-                                <div class="modal-content-text"
-                                    style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
-                                    {{ post.original_content|linebreaks }}</div>
+                                <details class="original-toggle">
+                                    <summary>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="2" x2="22" y1="12" y2="12" />
+                                            <path
+                                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                        </svg>
+                                        Original
+                                        <span class="toggle-chevron">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        </span>
+                                    </summary>
+                                    <div class="original-body">
+                                        <div class="modal-content-text"
+                                            style="font-family: 'Namkhone', 'Pyidaungsu', sans-serif;">
+                                            {{ post.original_content|linebreaks }}</div>
+                                    </div>
+                                </details>
                             </div>
                             {% if post.translated_content %}
                             <div class="modal-content-block translated">
@@ -985,6 +1065,13 @@
         if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
             closeModal();
         }
+    });
+
+    // Prevent original-toggle clicks from propagating to card onclick (which opens the modal)
+    document.querySelectorAll('.original-toggle summary').forEach(function (summary) {
+        summary.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
     });
 </script>
 
