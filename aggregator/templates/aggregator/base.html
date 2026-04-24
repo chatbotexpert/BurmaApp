@@ -22,7 +22,10 @@
                 Burma News
             </a>
             <div class="nav-links">
+                <a href="https://www.burma-news.org/" class="nav-link">Home</a>
                 <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Feed</a>
+                <a href="https://www.burma-news.org/howto.html" class="nav-link">Howto</a>
+                <a href="javascript:void(0)" class="nav-link" onclick="openSupportModal()">Support</a>
                 <a href="/feed/rss" target="_blank" class="nav-link"
                     style="display: inline-flex; align-items: center; gap: 0.25rem;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -137,6 +140,81 @@
         backToTopButton.onclick = function () {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
+
+        // --- Support Modal Logic ---
+        function openSupportModal() {
+            const overlay = document.getElementById('supportModalOverlay');
+            if (overlay) {
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeSupportModal() {
+            const overlay = document.getElementById('supportModalOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSupportModal();
+        });
+    </script>
+
+    <!-- Support Modal Container -->
+    <div class="glass-modal-overlay" id="supportModalOverlay" aria-hidden="true" role="dialog">
+        <div class="glass-modal-container">
+            <div class="glass-modal-header">
+                <button class="glass-modal-close" onclick="closeSupportModal()" aria-label="Close modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="glass-modal-body">
+                <div class="support-card-content">
+                    <h2 class="support-title">Support Burma News</h2>
+                    <p class="support-intro">The quickest way to help — even a single coffee goes directly towards the monthly server bill.</p>
+                    
+                    <div class="support-actions">
+                        <a href="https://ko-fi.com/burmanews" target="_blank" class="btn-premium btn-coffee">
+                            <span>☕ Buy a Coffee</span>
+                        </a>
+                        
+                        <div class="support-divider">
+                            <span>or</span>
+                        </div>
+                        
+                        <h3 class="support-subheader">One-off or recurring donation</h3>
+                        <p class="support-text">Support us via Ko-fi or PayPal — choose your own amount, once or monthly.</p>
+                        
+                        <div class="support-buttons-grid">
+                            <a href="https://ko-fi.com/burmanews" target="_blank" class="btn-premium btn-kofi">
+                                <span>♥ Donate via Ko-fi</span>
+                            </a>
+                            <a href="https://www.gofundme.com/f/help-build-a-myanmar-news-translation-archiving-platform?attribution_id=sl:6dad3c65-64d1-4244-92a0-83281ca5f734&lang=en_GB&ts=1760373757&utm_campaign=man_sharesheet_dash&utm_content=amp13_t1&utm_medium=customer&utm_source=copy_link" target="_blank" class="btn-premium btn-gofundme">
+                                <span>$ Donate via GOFUNDME</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="support-footer-note">
+                        ✦ All donations go entirely to running costs. This project has no paid staff. If you represent an organisation and would like to discuss ongoing support, get in touch.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Close on click outside the container
+        document.getElementById('supportModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeSupportModal();
+        });
     </script>
 </body>
 
