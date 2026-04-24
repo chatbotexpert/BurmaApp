@@ -69,9 +69,22 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        <div class="container">
-            &copy; {% now "Y" %} Burma News Aggregator
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <div class="footer-left">
+                <h3 class="footer-brand">Burma News Archive</h3>
+                <p class="footer-tagline">An MMA Project initiative — independent, open-access, community-powered.</p>
+            </div>
+            <div class="footer-right">
+                <div class="footer-links">
+                    <a href="https://www.burma-news.org/howto.html">About</a>
+                    <span class="separator">·</span>
+                    <a href="https://www.burma-news.org/">Archive</a>
+                    <span class="separator">·</span>
+                    <a href="javascript:void(0)" onclick="openSupportModal()">Support</a>
+                </div>
+                <p class="footer-copyright">© {% now "Y" %} MMA Project. Content remains property of original sources.</p>
+            </div>
         </div>
     </footer>
     <!-- Back to Top Button -->
