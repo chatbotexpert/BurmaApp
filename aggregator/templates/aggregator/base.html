@@ -21,7 +21,16 @@
             <a href="/" class="navbar-brand">
                 Burma News
             </a>
-            <div class="nav-links">
+            
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="nav-links" id="navLinks">
                 <a href="https://www.burma-news.org/" class="nav-link">Home</a>
                 <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Feed</a>
                 <a href="https://www.burma-news.org/howto.html" class="nav-link">Howto</a>
@@ -133,6 +142,14 @@
             iconSun.style.display = 'none';
             iconMoon.style.display = 'block';
         }
+
+        // --- Mobile Menu Toggle Logic ---
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
 
 
         // --- Back to Top Button Logic ---
